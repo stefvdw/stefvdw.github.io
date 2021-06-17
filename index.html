@@ -1,0 +1,76 @@
+<html>
+<head>
+    <script type="module">
+        import TempHumSensor from '/temp-hum-sensor.mjs'
+        import Bluetooth from '/bluetooth.mjs'
+        import Chart from '/chart.mjs'
+        
+        const chart = document.querySelector('canvas')
+        
+        document.querySelector('#getBluetoothDevice').onclick = () => Bluetooth.getDevice()
+        document.querySelector('#getBatteryStatus').onclick = () => Bluetooth.getBatteryStatus()
+        document.querySelector('#getTemperatureStatus').onclick = () => Bluetooth.getTemperatureStatus()
+        document.querySelector('#getPrimaryServices').onclick = () => Bluetooth.getPrimaryServices()
+        document.querySelector('#getNotifications').onclick = () => Bluetooth.getNotifications()
+        document.querySelector('#scan').onclick = () => Bluetooth.scan()
+        document.querySelector('#getLiveTemperatureAndHumidity').onclick = () => Bluetooth.getLiveTemperatureAndHumidity()
+        
+        
+    </script>
+    <style>
+        temp-hum-sensor {
+            display: block;
+            position: relative;
+            font-size: 1cm;
+            border-radius: 1.2cm;
+            margin: 1rem;
+            padding: 0.5cm;
+            border: 1cm solid whitesmoke;
+            background-color: darkgray;
+            height: 4.3cm;
+            width: 4.3cm;
+            box-shadow: inset 0 0 0.5cm rgba(0,0,0,0.3), 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+        }
+        
+        temp-hum-sensor > .battery {
+            position: absolute;
+            display: flex;
+            overflow: hidden;
+            top: 3px;
+            right: 3px;
+            width: 1cm;
+            height: 0.5cm;
+            border-radius: 3px;
+        }
+        
+        temp-hum-sensor.disconnected {
+            opacity: 0.5;
+        }
+
+        meter {
+            flex: 1
+        }
+    </style>
+</head>
+
+<body>
+    <temp-hum-sensor></temp-hum-sensor>
+    <temp-hum-sensor></temp-hum-sensor>
+    <temp-hum-sensor></temp-hum-sensor>
+    
+    
+    <button id="getBluetoothDevice">Connect to bluetooth device</button>
+    <button id="getBatteryStatus">Get battery status</button>
+    <button id="getTemperatureStatus">Get Temperature</button>
+    <button id="getPrimaryServices">Get Services</button>
+    <button id="getNotifications">Get Notifications</button>
+    <button id="scan">Scan</button>
+    <button id="getLiveTemperatureAndHumidity">getLiveTemperatureAndHumidity</button>
+    <canvas is="temp-chart"></canvas>
+    
+    <table>
+        
+    </table>
+</body>
+
+</html>
