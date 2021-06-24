@@ -1,4 +1,4 @@
-import Snackbar from '/snackbar.mjs'
+import Snackbar from './snackbar.mjs'
 
 export default class List extends HTMLFormElement {
 

@@ -1,5 +1,5 @@
-import Timer from '/timer.mjs'
-import Snackbar from '/snackbar.mjs'
+import Timer from './timer.mjs'
+import Snackbar from './snackbar.mjs'
 
 const list = document.forms['timers']
 list.elements['load'].addEventListener('click', () => load())

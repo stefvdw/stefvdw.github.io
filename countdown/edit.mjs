@@ -1,5 +1,5 @@
-import Timer from '/timer.mjs'
-import Snackbar from '/snackbar.mjs'
+import Timer from './timer.mjs'
+import Snackbar from './snackbar.mjs'
 
 export default class Edit extends HTMLDialogElement {
 
