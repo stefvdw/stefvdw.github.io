@@ -7,6 +7,7 @@ export default class Edit extends HTMLDialogElement {
     
     constructor() {
         super()
+        this.timer = null
     }
 
     get form() { return this.querySelector('form') }
@@ -19,6 +20,7 @@ export default class Edit extends HTMLDialogElement {
 
     attributeChangedCallback(name, oldValue, newValue) {
         this.form.elements['delete'].hidden = !this.timer
+        this.form.elements['clone'].hidden = !this.timer
       }
       
 
