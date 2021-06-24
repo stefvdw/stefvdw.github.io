@@ -13,8 +13,10 @@
         import Timer from './timer.mjs'
         import List from './list.mjs'     
         import Edit from './edit.mjs'     
-        import * as Storage from './storage.mjs'    
-        </script>
+        import * as Storage from './storage.mjs' 
+        
+        window.addEventListener('done', () => navigator.vibrate(200))
+    </script>
     
     <link rel="stylesheet" href="styles.css" media="print" onload="media='all'">
     
