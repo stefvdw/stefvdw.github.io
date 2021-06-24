@@ -4,82 +4,128 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
     <title>Countdown</title>
-    <base href="/">
+
+    <link rel="icon" href="icon.png">
+    <link rel="manifest" href="manifest.json">
+
+    
     <script type="module">
-        import TempHumSensor from '/temp-hum-sensor.mjs'
-        import Bluetooth from '/bluetooth.mjs'
-        import Chart from '/chart.mjs'
+        import Timer from './timer.mjs'
+        import List from './list.mjs'     
+        import Edit from './edit.mjs'     
+        import * as Storage from './storage.mjs' 
         
-        const chart = document.querySelector('canvas')
-        
-        document.querySelector('#getBluetoothDevice').onclick = () => Bluetooth.getDevice()
-        document.querySelector('#getBatteryStatus').onclick = () => Bluetooth.getBatteryStatus()
-        document.querySelector('#getTemperatureStatus').onclick = () => Bluetooth.getTemperatureStatus()
-        document.querySelector('#getPrimaryServices').onclick = () => Bluetooth.getPrimaryServices()
-        document.querySelector('#getNotifications').onclick = () => Bluetooth.getNotifications()
-        document.querySelector('#scan').onclick = () => Bluetooth.scan()
-        document.querySelector('#getLiveTemperatureAndHumidity').onclick = () => Bluetooth.getLiveTemperatureAndHumidity()
-        
-        
+        window.addEventListener('done', () => navigator.vibrate(200))
     </script>
+    
+    <link rel="stylesheet" href="styles.css" media="print" onload="media='all'">
+    
     <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto';
+            color: beige;
+        }
+        
+        *:focus {
+            outline: none;
+            box-shadow: 0 0px 3px 3px beige
+        }
+        
         body {
+            height: 100vh;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            background-color: darkseagreen;
+        }
+        
+        main {
+            overflow-y: auto;
+        }
+        
+        h1 {
+            padding: 0.5rem;
+            flex: 3;
+            white-space: nowrap;
+        }
+        
+        header, footer, nav {
+            flex: 1;
             display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            min-height: 4rem;
+            background-color: seagreen;
+        }
+        
+        header {
+            flex-wrap: wrap;
             align-items: center;
-            flex-direction: column;
-        }
-        temp-hum-sensor {
-            display: block;
-            position: relative;
-            font-size: 1cm;
-            border-radius: 1.2cm;
-            margin: 1rem;
-            padding: 0.5cm;
-            border: 1cm solid whitesmoke;
-            background-color: darkgray;
-            height: 4.3cm;
-            width: 4.3cm;
-            box-shadow: inset 0 0 0.5cm rgba(0,0,0,0.3), 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
         }
         
-        temp-hum-sensor > .battery {
-            position: absolute;
-            display: flex;
-            overflow: hidden;
-            top: 3px;
-            right: 3px;
-            width: 1cm;
-            height: 0.5cm;
-            border-radius: 3px;
+        footer > button {
+            flex: 1;
         }
         
-        temp-hum-sensor.disconnected {
-            opacity: 0.5;
-        }
-
-        meter {
-            flex: 1
-        }
-    </style>
+        button {
+            flex: 0;
+            background: none;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            min-width: 4rem;
+            border: 0px solid beige;
+            font-weight: 700;
+            text-transform: uppercase;
+        }     
+        
+    </style>    
 </head>
-
 <body>
-    <temp-hum-sensor></temp-hum-sensor>
-    <hr>
+    <header>
+        <h1>Count Down</h1>
+        <nav>
+            <button type="submit" form="timers" value="clear">Clear</button>
+            <button type="button" form="timers" name="load">load</button>
+            <button type="button" form="timers" name="save">save</button>
+            <button name="reset" form="timers" type="reset">Reset</button>
+            <button type="button" onclick="document.getElementById('edit').showModal()">Add</button>
+        </nav>
+    </header>
     
-    
-    <button id="getBluetoothDevice">Connect to bluetooth device</button>
-    <button id="getBatteryStatus">Get battery status</button>
-    <button id="getTemperatureStatus">Get Temperature</button>
-    <button id="getPrimaryServices">Get Services</button>
-    <button id="getNotifications">Get Notifications</button>
-    <button id="scan">Scan</button>
-    <button id="getLiveTemperatureAndHumidity">getLiveTemperatureAndHumidity</button>
-    <canvas is="temp-chart"></canvas>
-    
-    <table>
-        
-    </table>
-</body>
+    <main>
+        <form name="timers" id="timers" is="countdown-list"></form>
+    </main>
 
+    <footer>
+        <button value="startstop" form="timers" id="startstop">Start</button>
+    </footer>
+    
+    <dialog id="edit" is="edit-dialog">
+        <form method="dialog" name="edit">
+            <header>
+                <h2>Edit</h2>
+                <button type="submit" value="close">X</button>
+            </header>
+
+            <label>Name:
+                <input name="name" placeholder="Timer name" autocomplete="off" autofocus>
+            </label>
+            <label>Time:
+                <input type="number" aria-label="hours" placeholder="hh" name="hours" step="1" min="0">:
+                <input type="number" aria-label="minutes" placeholder="mm" name="minutes" step="1" min="0" max="59">:
+                <input type="number" aria-label="seconds" placeholder="ss" name="seconds" step="1" min="0" max="59">
+            </label>
+            <footer>
+                <button type="submit" value="save">Save</button>
+                <button type="submit" name="delete" value="delete">Delete</button>
+                <button type="submit" name="clone" value="clone">Duplicate</button>
+                
+            </footer>
+            
+        </form>
+    </dialog>
+    
+</body>
 </html>
