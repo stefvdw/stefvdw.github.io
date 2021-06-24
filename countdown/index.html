@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+    <title>Countdown</title>
+    <base href="/">
+    
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto';
+            color: beige;
+        }
+        
+        *:focus {
+            outline: none;
+            box-shadow: 0 0px 3px 3px beige
+        }
+        
+        body {
+            height: 100vh;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            background-color: darkseagreen;
+        }
+        
+        main {
+            overflow-y: auto;
+        }
+        
+        h1 {
+            padding: 0.5rem;
+            flex: 3;
+            white-space: nowrap;
+        }
+        
+        header, footer, nav {
+            flex: 1;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            min-height: 3rem;
+            background-color: seagreen;
+        }
+        
+        header {
+            flex-wrap: wrap;
+        }
+        
+        footer > button {
+            flex: 1;
+        }
+        
+        button {
+            flex: 0;
+            background: none;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            min-width: 4rem;
+            border: 0px solid beige;
+            font-weight: 700;
+            text-transform: uppercase;
+        }     
+        
+    </style>
+    
+    <link rel="stylesheet" href="styles.css" media="print" onload="media='all'"">
+    
+    <script type="module">
+        import Timer from '/timer.mjs'
+        import List from '/list.mjs'     
+        import Edit from '/edit.mjs'     
+        import * as Storage from '/storage.mjs'    
+        
+    </script>
+    
+</head>
+<body>
+    <header>
+        <h1>Count Down</h1>
+        <nav>
+            <button type="submit" form="timers" value="clear">Clear</button>
+            <button type="button" form="timers" name="load">load</button>
+            <button type="button" form="timers" name="save">save</button>
+            <button name="reset" form="timers" type="reset">Reset</button>
+            <button type="button" onclick="document.getElementById('edit').showModal()">Add</button>
+        </nav>
+    </header>
+    
+    <main>
+        <form name="timers" id="timers" is="countdown-list"></form>
+    </main>
+    <footer>
+        <button value="startstop" form="timers" id="startstop">Start</button>
+    </footer>
+    
+    <dialog id="edit" is="edit-dialog">
+        <form method="dialog" name="edit">
+            <label>Name:
+                <input name="name" placeholder="Timer name" autocomplete="off">
+            </label>
+            <label>Time:
+                <input type="number" aria-label="hours" placeholder="hh" name="hours" step="1" min="0">:
+                <input type="number" aria-label="minutes" placeholder="mm" name="minutes" step="1" min="0" max="59">:
+                <input type="number" aria-label="seconds" placeholder="ss" name="seconds" step="1" min="0" max="59">
+            </label>
+            <footer>
+                <button type="submit" value="save">Save</button>
+                <button type="submit" name="delete" value="delete">Delete</button>
+                <button type="submit" name="delete" value="clone">Duplicate</button>
+                <button type="submit" value="close">Close</button>
+            </footer>
+            
+        </form>
+    </dialog>
+    
+</body>
+</html>
