@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+    <title>Crypto QR</title>
+
+
+    
+    <script type="module">
+        import {encrypt, decrypt} from './crypto.mjs'
+
+        let form = document.forms[0]
+        let qr = document.getElementById('qr')
+
+        form.onsubmit = handleSubmit
+
+        async function handleSubmit(event) {
+            event.preventDefault()
+            if(event.submitter.value == "send") {
+                let message = form.elements.message.value
+                let cryptoblob = await encrypt(message)
+                let data = await cryptoblob.text()
+                qr.src = 'https://api.qrserver.com/v1/create-qr-code/?data=' + data
+            }
+
+            if(event.submitter.value == "receive") {
+                let barcodeDetector = new BarcodeDetector({formats: ['qr_code']})
+                let barcodes = await barcodeDetector.detect(qr)
+                form.elements.output.value = barcodes
+            }
+        }   
+       
+        
+    </script>
+
+    <style>
+          
+        
+    </style>    
+</head>
+<body>
+    <form>
+        <label>Message
+            <textarea name="message"></textarea>
+        </label>
+        <button type="submit" value="send">Create QR</button>
+        <button type="submit" value="receive">Read QR</button>
+
+    </form>
+
+    <img id="qr">
+    
+</body>
+</html>
