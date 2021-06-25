@@ -36,9 +36,9 @@
             }
             
             if(event.submitter.value == "receive") {
+                log('Attempting to read qr code')
                 let barcodeDetector = new BarcodeDetector({formats: ['qr_code']})
-                let barcodes = await barcodeDetector.detect(qr)
-                log(barcodes)
+                barcodeDetector.detect(qr).then(log).catch(log)
             }
         }   
         
