@@ -39,11 +39,15 @@
             }
             
             if(event.submitter.value == "receive") {
-                log('Attempting to read qr code')
-                new Image()
-
-                let barcodeDetector = new BarcodeDetector({formats: ['qr_code']})
-                barcodeDetector.detect(qr).then(log).catch(log)
+                try {
+                    log('Attempting to read qr code')
+                    let barcodeDetector = new BarcodeDetector({formats: ['qr_code']})
+                    let barcodes = await barcodeDetector.detect(qr)
+                    
+                } catch (error) {
+                    log(error)
+                }
+               
             }
         }   
         
