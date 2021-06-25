@@ -35,14 +35,14 @@ export async function encrypt(plaintext, password = null) {
   return new Blob([salt, iv, ciphertext])
 }
 
-export async function decrypt(cryptoblob) {
+export async function decrypt(cryptoblob, password = null) {
   let cryptoArray = await readBlob(cryptoblob)
   let salt = cryptoArray.slice(0,16)
   let iv = cryptoArray.slice(16,28)
-  let ciphertext = cryptoArray.slice(28)
- 
-  let keyMaterial = await getKeyMaterial()
+  let ciphertext = cryptoArray.slice(28) 
+  let keyMaterial = await getKeyMaterial(password)
   let key = await getKey(keyMaterial, salt)
+  
   
   try {
     let decrypted = await window.crypto.subtle.decrypt({name: "AES-GCM", iv: iv}, key, ciphertext)
