@@ -29,14 +29,19 @@
         async function handleSubmit(event) {
             event.preventDefault()
             if(event.submitter.value == "send") {
-                let message = form.elements.message.value
-                let cryptoblob = await encrypt(message)
-                let data = await cryptoblob.text()
-                qr.src = 'https://api.qrserver.com/v1/create-qr-code/?data=' + data
+                const message = form.elements.message.value
+                const cryptoblob = await encrypt(message)
+                const data = await cryptoblob.text()
+                const response = await fetch('https://api.qrserver.com/v1/create-qr-code/?data=' + data)
+                const blob =  await response.blob()
+                const objectURL = URL.createObjectURL(blob)
+                qr.src = objectURL
             }
             
             if(event.submitter.value == "receive") {
                 log('Attempting to read qr code')
+                new Image()
+
                 let barcodeDetector = new BarcodeDetector({formats: ['qr_code']})
                 barcodeDetector.detect(qr).then(log).catch(log)
             }
