@@ -38,7 +38,7 @@
             if(event.submitter.value == "receive") {
                 let barcodeDetector = new BarcodeDetector({formats: ['qr_code']})
                 let barcodes = await barcodeDetector.detect(qr)
-                form.elements.output.value = barcodes
+                log(barcodes)
             }
         }   
         
