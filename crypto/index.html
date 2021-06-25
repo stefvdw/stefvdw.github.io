@@ -43,7 +43,7 @@
                     log('Attempting to read qr code')
                     let barcodeDetector = new BarcodeDetector({formats: ['qr_code']})
                     let barcodes = await barcodeDetector.detect(qr)
-                    
+                    barcodes.forEach(barcode => log(barcode.rawData))
                 } catch (error) {
                     log(error)
                 }
