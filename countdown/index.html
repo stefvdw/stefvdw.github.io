@@ -12,9 +12,10 @@
     
     <script type="module">
         import Timer from './timer.mjs'
-        import List from './list.mjs'     
+        import List from './list.mjs'
         import Edit from './edit.mjs'     
-        import * as Storage from './storage.mjs' 
+        import * as Storage from './storage.mjs'
+
         
         window.addEventListener('done', () => navigator.vibrate(200))
     </script>
@@ -41,11 +42,7 @@
             grid-template-rows: auto 1fr auto;
             background-color: darkseagreen;
         }
-        
-        main {
-            overflow-y: auto;
-        }
-        
+              
         h1 {
             padding: 0.5rem;
             flex: 3;
@@ -79,6 +76,7 @@
             border: 0px solid beige;
             font-weight: 700;
             text-transform: uppercase;
+            cursor: pointer;
         }     
         
     </style>    
@@ -95,9 +93,8 @@
         </nav>
     </header>
     
-    <main>
-        <form name="timers" id="timers" is="countdown-list"></form>
-    </main>
+
+    <form name="timers" id="timers" is="countdown-list"></form>
 
     <footer>
         <button value="startstop" form="timers" id="startstop">Start</button>
@@ -107,16 +104,22 @@
         <form method="dialog" name="edit">
             <header>
                 <h2>Edit</h2>
-                <button type="submit" value="close">X</button>
+                <button type="button" value="close" onclick="this.closest('dialog').close()">X</button>
             </header>
 
-            <label>Name:
+            <label>
+                <span>Name:</span>
                 <input name="name" placeholder="Timer name" autocomplete="off" autofocus>
             </label>
-            <label>Time:
+            <label>
+                <span>Time:</span>
                 <input type="number" aria-label="hours" placeholder="hh" name="hours" step="1" min="0">:
                 <input type="number" aria-label="minutes" placeholder="mm" name="minutes" step="1" min="0" max="59">:
                 <input type="number" aria-label="seconds" placeholder="ss" name="seconds" step="1" min="0" max="59">
+            </label>
+            <label>
+                <span>Position:</span>
+                <input type="number" aria-label="position" name="position" step="1" min="1">
             </label>
             <footer>
                 <button type="submit" value="save">Save</button>

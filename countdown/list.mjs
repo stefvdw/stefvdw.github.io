@@ -31,6 +31,7 @@ export default class List extends HTMLFormElement {
 
         if(event.submitter.value == 'clear') {
             this.clear()
+            this.stopCurrentTimer()
         }
     }
 

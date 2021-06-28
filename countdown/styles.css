@@ -24,7 +24,11 @@ label {
     gap: 0.5rem;
 }
 
-input {
+label > span {
+    flex: 0 0 4rem;
+}
+
+input, select {
     background-color: darkseagreen;
     width: 100%;
     min-width: 1rem;
@@ -41,8 +45,7 @@ input::placeholder {
 
 input[type="number"] {
     text-align: center;
-    min-width: 4rem;
-    flex: 0;
+    flex: 1 0 3rem;
 }
 
 form {
@@ -50,18 +53,20 @@ form {
     flex-direction: column;
     gap: 1rem;
     padding: 1rem;
+    overflow-y: auto;
+    counter-reset: timer;
 }
 
 progress {
     width: auto;
-    flex: 1;
     margin: 1rem;
     cursor: pointer;
     contain: layout;
 }
 
 progress::before {
-    content: attr(name);
+    counter-increment: timer;
+    content: counter(timer) " - " attr(name);
     text-transform: capitalize;
     position: relative;
     top: -1.3rem;

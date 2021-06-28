@@ -11,6 +11,7 @@ export default class Edit extends HTMLDialogElement {
     }
 
     get form() { return this.querySelector('form') }
+    get timers() { return document.forms['timers'].children}
 
     connectedCallback() {
         window.addEventListener('contextmenu', this.open.bind(this))
@@ -21,6 +22,8 @@ export default class Edit extends HTMLDialogElement {
     attributeChangedCallback(name, oldValue, newValue) {
         this.form.elements['delete'].hidden = !this.timer
         this.form.elements['clone'].hidden = !this.timer
+        this.form.elements['position'].max = this.timers.length + 1
+        this.form.elements['position'].value = this.timers.length + 1
       }
       
 
@@ -28,11 +31,12 @@ export default class Edit extends HTMLDialogElement {
         if(event.target instanceof Timer) {
             event.preventDefault()
             this.timer = event.target
+            this.showModal()
             this.form.elements['name'].value = this.timer.name || ''
             this.form.elements['hours'].value = this.timer.hours
             this.form.elements['minutes'].value = this.timer.minutes
             this.form.elements['seconds'].value = this.timer.seconds
-            this.showModal()
+            this.form.elements['position'].value = [...this.timers].indexOf(this.timer) + 1
         }
         
     }
@@ -61,10 +65,16 @@ export default class Edit extends HTMLDialogElement {
         const seconds = this.form.elements['seconds'].valueAsNumber || 0
         const timer = new Timer({name, seconds, minutes, hours})
 
+        const position = this.form.elements['position'].valueAsNumber
+
         if(this.timer) {
             this.timer.replaceWith(timer)
         } else {
-            document.forms['timers'].append(timer)
+            if(!isNaN(position) && this.timers[position - 1]) {
+                this.timers[position - 1].before(timer)
+            } else {
+                document.forms['timers'].append(timer)
+            }
         }
         new Snackbar(`Timer '${timer.name}' saved`)
         
