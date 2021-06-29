@@ -1,5 +1,5 @@
 import Timer from './timer.mjs'
-import Snackbar from './snackbar.mjs'
+import Toast from './toast.mjs'
 
 export default class Edit extends HTMLDialogElement {
 
@@ -52,7 +52,7 @@ export default class Edit extends HTMLDialogElement {
                 break
             case 'clone':
                 this.timer.clone()
-                new Snackbar(`Timer '${this.timer.name}' duplicated`)
+                new Toast(`Timer '${this.timer.name}' duplicated`)
                 break
         }
         this.close()
@@ -76,13 +76,13 @@ export default class Edit extends HTMLDialogElement {
                 document.forms['timers'].append(timer)
             }
         }
-        new Snackbar(`Timer '${timer.name}' saved`)
+        new Toast(`Timer '${timer.name}' saved`)
         
     }
     
     delete() {
         this.timer?.remove()
-        new Snackbar(`Timer '${this.timer.name}' removed`)
+        new Toast(`Timer '${this.timer.name}' removed`)
     }
 
     reset() {
