@@ -45,16 +45,18 @@ export default class Timers extends HTMLFormElement {
         }
     }
 
-    startCurrentTimer() {
+    async startCurrentTimer() {
         if(!this.currentTimer) return
         this.currentTimer.start()
         this.active = true
+        this.wakelock = await navigator.wakeLock?.request('screen')
         this.startstop.innerText = 'stop'
     }
 
-    stopCurrentTimer() {
+    async stopCurrentTimer() {
         this.currentTimer?.stop()
         this.active = false
+        this.wakelock = await this.wakelock?.release()
         this.startstop.innerText = 'start'
     }
     
