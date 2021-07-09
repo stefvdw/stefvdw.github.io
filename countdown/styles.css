@@ -9,6 +9,7 @@ dialog {
     border-radius: 0.5rem;
     box-shadow: 0 0px 10px 1px beige;
     min-width: 300px;
+    animation: fadeIn 0.25s ease-in;
 }
 
 dialog::backdrop {
