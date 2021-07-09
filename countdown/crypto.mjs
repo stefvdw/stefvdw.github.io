@@ -32,7 +32,7 @@ export async function encrypt(plaintext, password) {
   let iv = window.crypto.getRandomValues(new Uint8Array(12))
   let message = encoder.encode(plaintext)
   let ciphertext = await window.crypto.subtle.encrypt({name: "AES-GCM", iv: iv}, key, message)
-  return new Blob([salt, iv, ciphertext])
+  return new Blob([salt, iv, ciphertext], {type: 'application/octet-stream'})
 }
 
 export async function decrypt(cryptoblob, password) {
