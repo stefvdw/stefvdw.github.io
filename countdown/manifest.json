@@ -5,7 +5,7 @@
     "display": "standalone",
     "theme_color": "seagreen",
     "orientation": "portrait-primary",
-    "background_color": "darkseagreen",
+    "background_color": "seagreen",
     "description": "Countdown app for running multiple timers",
     "icons": [{
             "src": "icons/icon.png",
