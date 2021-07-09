@@ -9,10 +9,12 @@
     "description": "Countdown app for running multiple timers",
     "icons": [{
             "src": "icon.png",
-            "sizes": "144x144"
+            "sizes": "144x144",
+            "purpose": "any maskable"
         },{
             "src": "icon512.png",
-            "sizes": "512x512"
+            "sizes": "512x512",
+            "purpose": "any maskable"
         }, {
             "src": "icon.svg",
             "sizes": "24x24"

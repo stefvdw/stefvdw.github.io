@@ -18,6 +18,8 @@
         
         
         window.addEventListener('done', () => navigator.vibrate(200))
+
+        navigator.serviceWorker.register('/sw.js')
     </script>
     
     <link rel="stylesheet" href="styles.css" media="print" onload="media='all'">
