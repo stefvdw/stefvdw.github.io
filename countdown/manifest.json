@@ -8,14 +8,23 @@
     "background_color": "darkseagreen",
     "description": "Countdown app for running multiple timers",
     "icons": [{
-            "src": "icon.png",
-            "sizes": "144x144"
+            "src": "icons/icon.png",
+            "sizes": "144x144",
+            "type": "image/png",
+            "purpose": "any"
         },{
-            "src": "icon512.png",
+            "src": "icons/icon512.png",
             "sizes": "512x512",
-            "purpose": "any maskable"
+            "type": "image/png",
+            "purpose": "any"
         }, {
-            "src": "icon.svg",
-            "sizes": "24x24"
-        }]
+            "src": "icons/icon.svg",
+            "sizes": "24x24",
+            "purpose": "any"
+        }, {
+            "src": "icons/iconM512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+          }]
     }
