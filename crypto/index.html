@@ -8,45 +8,48 @@
     
     
     <script type="module">
-        import {encrypt, decrypt} from './crypto.mjs'
-        
-        let form = document.forms[0]
-        let blob = null
-        
-        form.onsubmit = handleSubmit
+        import CDB from './cdb.mjs'
+        import CryptoForm from './cryptoform.mjs'
 
-        function log(text) {
-            form.elements.log.value = text
+        async function updateNav() {
+            const keys = await CDB.getAllKeys()
+            const nav = document.querySelector('nav')
+            nav.innerText = ''
+            keys.forEach(key => {
+                const link = document.createElement('a')
+                link.href = `#${key}`
+                link.innerText = key
+                nav.append(link)
+            })
         }
-        
-        async function handleSubmit(event) {
-            event.preventDefault()
-            if(event.submitter.value == "send") {
-                const message = form.elements.message.value
-                const password = form.elements.password.value
-                blob = await encrypt(message, password)
-                const response = await fetch(URL.createObjectURL(blob))
-                const text = await response.text()
-                log(text)
-            }
-            
-            if(event.submitter.value == "receive") {
-                try {
-                    const password = form.elements.password.value
-                    const message = await decrypt(blob, password)
-                    log(message)
-                   
-                } catch (error) {
-                    log(error)
-                }
-               
-            }
-        }   
+
+        document.forms['main'].addEventListener('submit', updateNav)
+
+        updateNav()
         
         
     </script>
     
     <style>
+        * {
+            color-scheme: light dark;
+            color: canvastext;
+            background: canvas;
+        }
+
+        button {
+            background: ButtonFace;
+            color: ButtonText;
+            border: none;
+            padding: 1rem;
+        }
+
+        input, textarea {
+            background: Field;
+            color: FieldText;
+            padding: 1rem;
+        }
+
         form {
             display: flex;
             flex-direction: column;
@@ -55,19 +58,34 @@
             margin: auto;
             padding: 3rem;
         }
+
+        nav {
+            display: flex;
+            flex-direction: row;
+            gap: 1rem;
+        }
+
+        nav > a {
+            flex: 1;
+            text-decoration: none;
+            padding: 1rem;
+            border-bottom: 1px solid greenyellow;
+        }
         
     </style>    
 </head>
 <body>
-    <form>
+    <nav></nav>
+    <form id="main" is="crypto-form" method="post">
+        <label for="name">Message:</label>
+        <input id="name" name="name" title="Name will not be encrypted" required>
         <label for="message">Message:</label>
-        <textarea id="message" name="message" rows="8">hallo</textarea>
+        <textarea id="message" name="message" rows="8"></textarea>
         <label for="password">Password:</label>
-        <input id="password" name="password">
-        <label for="log">log:</label>
-        <output id="log" name="log"></output>
-        <button type="submit" value="send">Encrypt</button>
-        <button type="submit" value="receive">Decrypt</button>
+        <input id="password" name="password" type="password">
+        <button type="submit" value="save">Save</button>
+        <button type="submit" value="delete">Delete</button>
+        <button type="reset">Clear</button>
     </form>
     
 </body>
