@@ -1,4 +1,5 @@
 import CDB from './cdb.mjs'
+import Toast from './toast.mjs'
 
 
 export default class CryptoForm extends HTMLFormElement {
@@ -15,13 +16,17 @@ export default class CryptoForm extends HTMLFormElement {
     }
 
     async loadFromHash() {
-        this.key = decodeURI(window.location.hash).slice(1)
+        this.key = decodeURI(window.location.hash).slice(1).toLocaleLowerCase()
         if(!this.key) return
-        console.log('loading key:', this.key)
-        const message = await CDB.get(this.key)
-        console.log('got message:', message)
-        this.elements.name.value = this.key
-        this.elements.message.value = message
+        try {
+            const message = await CDB.get(this.key)
+            this.elements.menu.checked = false
+            this.elements.name.value = this.key
+            this.elements.message.value = message
+        } catch (error) {
+            new Toast(error)
+        }
+        
     }
 
     async store(event) {
@@ -31,7 +36,7 @@ export default class CryptoForm extends HTMLFormElement {
             this.reset()
             return CDB.delete(this.key)
         } else {
-            const name = this.elements.name.value
+            const name = this.elements.name.value.toLocaleLowerCase()
             const message = this.elements.message.value
             const password = this.elements.password.value
             
@@ -40,7 +45,8 @@ export default class CryptoForm extends HTMLFormElement {
                 this.key = name
             }
     
-            return CDB.set(name, message, password)
+            await CDB.set(name, message, password)
+            return 
         }
           
        

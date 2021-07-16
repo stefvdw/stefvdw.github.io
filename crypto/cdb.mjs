@@ -160,7 +160,9 @@ class CDB extends IDB {
       }
     
     async get(key, password, transaction) {
-        const {name, blob} = await super.get(key, transaction)
+        const result = await super.get(key, transaction)
+        if(!result) throw `'${key}' not found`
+        const {name, blob} = result
         const cryptoArray = await blob.arrayBuffer()
         const salt = cryptoArray.slice(0,16)
         const iv = cryptoArray.slice(16,28)
@@ -172,7 +174,7 @@ class CDB extends IDB {
             const decrypted = await window.crypto.subtle.decrypt({name: "AES-GCM", iv: iv}, cryptokey, ciphertext)
             return this.decoder.decode(decrypted)
         } catch (e) {
-            throw new Error('Failed to decrypt')
+            throw `Incorrect password for ${key}`
         }
     }
         

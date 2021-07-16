@@ -3,28 +3,29 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
-    <title>Crypto QR</title>
+    <title>Crypto note</title>
     
     
     
     <script type="module">
         import CDB from './cdb.mjs'
         import CryptoForm from './cryptoform.mjs'
-
+        
         async function updateNav() {
+            console.log('reload nav')
             const keys = await CDB.getAllKeys()
             const nav = document.querySelector('nav')
-            nav.innerText = ''
-            keys.forEach(key => {
+            document.querySelectorAll('nav > a').forEach(link => link.remove())
+            keys.forEach(key => {                
                 const link = document.createElement('a')
                 link.href = `#${key}`
                 link.innerText = key
                 nav.append(link)
             })
         }
-
-        document.forms['main'].addEventListener('submit', updateNav)
-
+        
+        document.forms['main'].addEventListener('submit', () => setTimeout(updateNav, 100), {passive: true})
+        window.addEventListener('hashchange', () => document.forms['main'].reset())
         updateNav()
         
         
@@ -33,60 +34,186 @@
     <style>
         * {
             color-scheme: light dark;
-            color: canvastext;
-            background: canvas;
-        }
-
-        button {
-            background: ButtonFace;
-            color: ButtonText;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: roboto;
             border: none;
-            padding: 1rem;
         }
 
-        input, textarea {
-            background: Field;
-            color: FieldText;
-            padding: 1rem;
-        }
-
-        form {
+        body {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
-            max-width: 500px;
-            margin: auto;
-            padding: 3rem;
+            height: 100vh;
         }
-
-        nav {
+        
+        nav, main {
             display: flex;
-            flex-direction: row;
-            gap: 1rem;
+            flex-direction: column;
+            gap: 0.5rem;
+            overflow-y: auto;
         }
-
-        nav > a {
-            flex: 1;
+        
+        a {
+            flex: 0;
             text-decoration: none;
             padding: 1rem;
-            border-bottom: 1px solid greenyellow;
+            color: canvasText;
         }
+        
+        nav > a {
+            display: flex;
+            align-items: center;
+            padding-right: 2rem;
+            border-bottom: 1px solid darkgray;
+            position: relative;
+        }
+        
+        nav > a::after {
+            content: '›';
+            position: absolute;
+            right: 0.5rem;
+            line-height: 1rem;
+            font-size: 2rem;
+        }
+        
+        button {
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+        }
+        
+        input, textarea {
+            padding: 1rem;
+            box-shadow: 0 0 5px rgb(0 0 0 / 10%);
+            border: 1px darkgrey solid;
+            border-radius: 5px;
+        }
+        
+        header, footer {
+            display: flex;
+            min-height: 3rem;
+            align-items: center;
+            padding: 0 1rem;
+            justify-content: space-between;
+        }
+        
+        form {
+            flex: 1;
+            display: flex;
+            flex-direction: row;
+        }
+        
+        #menu {
+            display: none;
+        }
+        
+        aside {
+            display: none;
+            position: fixed;
+            flex: 1;
+            height: 100vh;
+            min-width: 60vw;
+            overflow-y: auto;
+            background-color: buttonface;
+        }
+        
+        main {
+            flex: 3;
+            padding: 1rem;
+        }
+        
+        #menu:checked + aside {
+            display: block;
+            flex: 1;
+        }
+        
+        header {
+            background-color: buttonface;
+            gap: 1rem;
+        }
+        
+        header > label {
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        h1 { 
+            flex: 1;
+        }
+        
+        dialog.toast {
+            position: fixed;
+            margin: 1rem;
+            bottom: 0;
+            width: 20rem;
+            max-width: calc(100vw - 2rem);
+            border-radius: 0.5rem;
+            background-color: buttonface;
+            padding: 1rem;
+            animation: show 0.5s ease normal;
+            box-shadow: none;
+        }
+        
+        @keyframes show{
+            from {
+                transform: translateY(110%);
+            }
+            to {
+                transform: translateY(0%);
+            }
+        }
+        
+        @media only screen and (min-width: 768px) { 
+            
+            aside {
+                display: block;
+                position: relative;
+                min-width: auto
+            }
+            
+            nav, fieldset {
+                padding: 1rem;
+            }
+            
+            header > label {
+                display: none;
+            }
+        }
+        
         
     </style>    
 </head>
 <body>
-    <nav></nav>
-    <form id="main" is="crypto-form" method="post">
-        <label for="name">Message:</label>
-        <input id="name" name="name" title="Name will not be encrypted" required>
-        <label for="message">Message:</label>
-        <textarea id="message" name="message" rows="8"></textarea>
-        <label for="password">Password:</label>
-        <input id="password" name="password" type="password">
-        <button type="submit" value="save">Save</button>
-        <button type="submit" value="delete">Delete</button>
-        <button type="reset">Clear</button>
+    <header>
+        <label for="menu">☰</label>
+        <h1>Crypto notes</h1>
+        <a href="#">+</a>
+    </header>
+    
+    <form name="main" id="main" is="crypto-form" method="post">
+        <input type="checkbox" id="menu">
+        <aside>
+            <nav></nav>
+        </aside>
+        
+        
+        <main>
+            <label for="name">Name:</label>
+            <input id="name" name="name" title="Name will not be encrypted" required>
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" rows="8"></textarea>
+            <label for="password">Password:</label>
+            <input id="password" name="password" type="password">
+            
+            <footer>
+                <button type="submit" value="save">Save</button>
+                <button type="submit" value="delete">Delete</button>
+                <button type="reset">Clear</button>
+            </footer>
+        </main>
     </form>
+    
     
 </body>
 </html>
