@@ -40,7 +40,7 @@
             font-family: roboto;
             border: none;
         }
-
+        
         body {
             display: flex;
             flex-direction: column;
@@ -52,6 +52,13 @@
             flex-direction: column;
             gap: 0.5rem;
             overflow-y: auto;
+        }
+        
+        nav:empty::after {
+            content: 'No stored notes';
+            text-align: center;
+            padding: 1rem;
+            color: darkgray;
         }
         
         a {
