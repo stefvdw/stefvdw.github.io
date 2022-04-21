@@ -2,7 +2,7 @@
     "name": "Countdown timer",
     "short_name": "Countdown",
     "start_url": ".",
-    "display": "standalone",
+    "display": "fullscreen",
     "theme_color": "seagreen",
     "orientation": "portrait-primary",
     "background_color": "seagreen",
