@@ -1,0 +1,251 @@
+<html>
+	<head>
+		<title>Matrix maker</title>
+		<style>s
+			form {
+				display: flex;
+				flex-direction: column;
+				margin: auto;
+				max-width: fit-content;
+			}
+			fieldset, hr {
+				/* border: none; */
+				border: 1px solid grey;
+			}
+			table {
+				border-collapse: collapse;
+				/* border: 1px solid grey; */
+				margin: auto;
+			}
+			td, input[type="number"] {
+				text-align: center;
+				width: 100px;
+				height: 50px;
+				font-size: 1.3em;
+				border: 1px solid gray;
+			}
+
+			.rotate {
+				transform: rotate(-90deg); 
+			}
+		</style>
+		<script type="module">
+
+			const form = document.forms[0]
+            const parser = new DOMParser()
+            const reader = new FileReader()
+
+			loadFactors()
+
+			document.getElementById('matrixform').onsubmit = CreateAndDownload
+			document.addEventListener('change', saveFactors)
+            document.getElementById('uploadMatrixField').onchange = loadMatrixFromFile
+
+            reader.onload = parseXML
+
+			const matrixConfig = {
+					standard96: {
+						filename: 'Standard 96.matrix',
+						template: 'standard96.template'
+					},
+					standard384: {
+						filename: 'Standard 384.matrix',
+						template: 'standard384.template'
+					},
+					standard96old: {
+						filename: 'Standard 96 old.matrix',
+						template: 'standard96old.template'
+					},
+                    standard384old: {
+						filename: 'Standard 384 old.matrix',
+						template: 'standard384old.template'
+					}
+				}
+
+            function loadMatrixFromFile(event) {
+                let file = event.target.files.item(0)
+                console.log(file)
+                if (!file) return
+                reader.readAsText(file)
+            }
+
+            function parseXML() {
+                const xml = parser.parseFromString( reader.result, "application/xml")
+                let coefficients = xml.getElementsByTagName('Coefficient')
+                for (const coefficient of coefficients) {
+                    debugger
+                    console.log(coefficient.getAttribute('Origin'))
+                    console.log(coefficient.getAttribute('Affected'))
+                    console.log(coefficient.getAttribute('Factor'))
+                }
+            }
+
+            function getCoefficientFromXML(coefficient) {
+
+            }
+
+			async function CreateAndDownload(event) {
+				event.preventDefault()
+				const configType = event.submitter.value.toString() || 'standard96'
+				console.log(configType)
+
+				let {filename, template} = matrixConfig[configType]
+
+				let templatecontent = await getTemplateContent(template)
+
+				templatecontent = addFactorsToTemplate(templatecontent)
+							
+				const serializer = new XMLSerializer()
+				const xml = serializer.serializeToString(templatecontent)
+                const data = new FormData(form)
+                if(data.get('name')?.trim()) {
+                    filename = data.get('name')?.trim() + '.matrix'
+                }
+				downloadXML(xml, filename)
+			}
+
+			function addFactorsToTemplate(template) {
+				const data = new FormData(form)
+				for (const coefficient of template.querySelectorAll('[Factor]')) {
+					console.log(coefficient)
+					let factor = data.get(coefficient.getAttribute("Factor")) * -1
+					if (!factor) {
+						factor = 0
+					}
+					coefficient.setAttribute('Factor', factor)
+				}
+
+				if(data.get('name')?.trim()) {
+					template.querySelector('CoefficientFactors').setAttribute('Name', data.get('name')?.trim())
+				}
+
+				return template
+			}
+
+			function downloadXML(xml, filename) {
+				const pom = document.createElement('a')
+				const bb = new Blob([xml], {type: 'text/plain'})
+				
+				pom.setAttribute('href', window.URL.createObjectURL(bb))
+				pom.setAttribute('download', filename)
+				
+				pom.dataset.downloadurl = ['text/plain', pom.download, pom.href].join(':')
+				pom.draggable = true
+				pom.classList.add('dragout')
+				pom.click()
+			}
+
+			async function getTemplateContent(template) {
+				const result = await fetch(template)
+				let templatecontent = await result.text()
+				
+				return parser.parseFromString(templatecontent, 'text/xml')
+			}
+
+			function saveFactors() {
+				const data = new FormData(form)
+				for (const [key, val] of data.entries()) {
+					localStorage.setItem(key, val)
+				}
+			}
+
+			function loadFactors() {
+				const data = new FormData(form)
+				for (const key of data.keys()) {
+					let val = localStorage.getItem(key)
+					if(form.elements[key].type == 'number') {
+						form.elements[key].value = val || 0
+					} else {
+						form.elements[key].value = val?.trim() || ''
+					}
+				}
+			}
+				
+				
+		</script>
+	</head>
+	<body>
+		<form id="matrixform">
+
+            <fieldset hidden>
+				<legend>Load matrix:</legend>
+                <label>
+                    <input type="file" id="uploadMatrixField" accept="xml/*,.matrix">
+                </label>
+			</fieldset>
+			
+			<fieldset>
+				<legend>Download as:</legend>
+				<button type="submit" value="standard96">Standard 96</button>
+				<button type="submit" value="standard96old">Standard 96 old</button>
+				<button type="submit" value="standard384">Standard 384</button>
+				<button type="submit" value="standard384old">Standard 384 old</button>
+				<hr>
+				<label>Alternative name in Q-Rex: <input type="text" name="name" placeholder="test matrix"></label>
+			</fieldset>
+			
+			<fieldset>
+				<legend>Matrix:</legend>
+				<table>
+					<thead>
+						<tr>
+							<th colspan="7">Origin</th>
+						</tr>
+						<tr>
+							<th></th>
+							<th></th>
+							<th>Blue</th>
+							<th>Green</th>
+							<th>Orange</th>
+							<th>Red</th>
+							<th>NIR1</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<th rowspan="6" class="rotate">Affected</th>
+							<th>Blue</th>
+							<td>1</td>
+							<td><input name="GreenIntoBlue" type="number" max="1" step="0.001" min="0" value="0.25"></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<th>Green</th>
+							<td><input name="BlueIntoGreen" type="number" max="1" step="0.001" min="0" value="0.25"></td>
+							<td>1</td>
+							<td><input name="OrangeIntoGreen" type="number" max="1" step="0.001" min="0" value="0.25"></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<th>Orange</th>
+							<td></td>
+							<td><input name="GreenIntoOrange" type="number" max="1" step="0.001" min="0" value="0.25"></td>
+							<td>1</td>
+							<td><input name="RedIntoOrange" type="number" max="1" step="0.001" min="0" value="0.25"></td>
+							<td></td>
+						</tr>
+						<tr>
+							<th>Red</th>
+							<td></td>
+							<td></td>
+							<td><input name="OrangeIntoRed" type="number" max="1" step="0.001" min="0" value="0.25"></td>
+							<td>1</td>
+							<td><input name="NIR1IntoRed" type="number" max="1" step="0.001" min="0" value="0.25"></td>
+						</tr>
+						<tr>
+							<th>NIR1</th>
+							<td></td>
+							<td></td>
+							<td><input name="OrangeIntoNIR1" type="number" max="1" step="0.001" min="0" value="0.25"></td>
+							<td><input name="RedIntoNIR1" type="number" max="1" step="0.001" min="0" value="0.25"></td>
+							<td>1</td>
+						</tr>
+					</tbody>
+				</table>
+			</fieldset>
+		</form>
+	</body>
+</html>
