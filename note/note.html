@@ -1,0 +1,72 @@
+<html>
+<head>
+    <title>File editor</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/matrix.png">
+    <link rel="icon" href="/matrix.svg" type="image/svg+xml">
+
+    <script type="module">
+        import File from '/file.mjs'
+        navigation.addEventListener('navigate', event => {
+            if(!document.getElementById('navigationIntercept').checked) return
+
+            event.intercept({
+                async handler() {
+                    // Fetch the new content and display when ready
+                    console.log('intrecept navigation')
+                    await Promise.resolve()
+                }
+            })
+        })
+        
+        let fileHandle = null
+        let fileData = null
+        
+        
+        async function getTheFile() {
+            
+            
+            // open file picker
+            [fileHandle] = await window.showOpenFilePicker()
+            // get file contents
+            fileData = await fileHandle.getFile()
+            document.getElementById('editor').value = await fileData.text()   
+
+        }
+        
+        async function writeFile(fileHandle, contents) {
+            // Create a FileSystemWritableFileStream to write to.
+            const writable = await fileHandle.createWritable();
+            
+            // Write the contents of the file to the stream.
+            await writable.write(contents);
+            
+            // Close the file and write the contents to disk.
+            await writable.close();
+        }
+        
+        
+        document.getElementById('open').onclick = async () => {
+            await getTheFile()
+            console.log(fileHandle)
+        }
+        
+        document.getElementById('save').onclick = async () => {
+            writeFile(fileHandle,fileData)
+        }
+        
+        
+    </script>
+    
+</head>
+<body>
+    <nav>
+        <button id="open" type="button">Open</button>
+        <button id="save" type="button">Save</button>
+        <label>Intercept navigation<input id="navigationIntercept" type="checkbox"></label>
+    </nav>
+    
+    <textarea id="editor"></textarea>
+    
+</body>
+</html>
