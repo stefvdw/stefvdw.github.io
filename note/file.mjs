@@ -1,5 +1,6 @@
-export default class File {
+export default class File extends EventTarget{
     constructor(options = {multiple: false}) {
+        super()
         this.fileHandle
         this.content = ''
         this.options = options 
@@ -35,9 +36,10 @@ export default class File {
         try {
             if(!this.fileHandle) throw new Error('No file handle')
             console.log(`Opening ${this.fileHandle.name}`)
-            if(!await this.verifyPermission(this.fileHandle, true)) throw new Error('No file wread write permission')
+            if(!await this.verifyPermission(this.fileHandle, true)) throw new Error('No file read write permission')
             const file = await this.fileHandle.getFile()
-            this.content = await file.text()   
+            this.content = await file.text()
+            this.dispatchEvent(new Event('load'))
             return this.content
         } catch (error) {
             alert(error)
