@@ -37,7 +37,8 @@ export default class File {
             console.log(`Opening ${this.fileHandle.name}`)
             if(!await this.verifyPermission(this.fileHandle, true)) throw new Error('No file wread write permission')
             const file = await this.fileHandle.getFile()
-            this.content = await file.text()       
+            this.content = await file.text()   
+            return this.content
         } catch (error) {
             alert(error)
         }
@@ -56,6 +57,7 @@ export default class File {
             const writable = await this.fileHandle.createWritable()
             await writable.write(this.content)
             await writable.close()
+            this.dispatchEvent(new Event('saved'))
         } catch (error) {
             alert(error)
         } finally {

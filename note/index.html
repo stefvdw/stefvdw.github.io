@@ -10,13 +10,13 @@
 
         let file = new File()
         const editor = document.getElementById('editor')
-        
-     
-        
-        document.getElementById('open').onclick = async () => {
-            await file.open()
-            console.log(file)
+
+        window.addEventListener('drop', () => {
             editor.value = file.content
+        }, {passive: true})
+                
+        document.getElementById('open').onclick = async () => {
+            editor.value = await file.open()
         }
         
         document.getElementById('save').onclick = async () => {
@@ -34,7 +34,7 @@
         <button id="save" type="button">Save</button>
     </nav>
     
-    <textarea id="editor"></textarea>
+    <textarea id="editor" rows="20" cols="50"></textarea>
     
 </body>
 </html>
