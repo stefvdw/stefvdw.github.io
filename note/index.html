@@ -10,6 +10,7 @@
 
         let file = new File()
         const editor = document.getElementById('editor')
+        const saveBtn = document.getElementById('save')
 
         file.addEventListener('load', () => {
             editor.value = file.content
@@ -20,8 +21,18 @@
         }
         
         document.getElementById('save').onclick = async () => {
-            file.content = editor.value
-            file.save()
+            try {
+                saveBtn.innerText = 'Saving...'
+                saveBtn.disabled = true
+                file.content = editor.value
+                await file.save()
+            } catch (error) {
+                alert(error)
+            } finally {
+                saveBtn.innerText = 'Save'
+                saveBtn.disabled = false
+            }
+            
         }
         
         
