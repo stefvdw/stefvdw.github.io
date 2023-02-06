@@ -8,23 +8,10 @@
     <script type="module">
         import matrix from './matrix.mjs'
         
-        matrix.addEventListener('load', render)
-    
-        
         const form = document.forms['matrixform']
-
-        form.addEventListener('change', saveCoefficients)
         
-        navigation.addEventListener('navigate', event => {
-            event.intercept({
-                async handler() {
-                    // Fetch the new content and display when ready
-                    console.log('intrecept navigation')
-                    await Promise.resolve()
-                }
-            })
-        })
-
+        matrix.addEventListener('load', render)
+        
         render()
         
         function render() {
@@ -80,7 +67,7 @@
         }
         
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.mjs');
+            navigator.serviceWorker.register('./sw.mjs');
         }
         
         
