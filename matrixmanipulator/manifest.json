@@ -2,9 +2,9 @@
     "name": "Matrix manipulator",
     "lang": "en-us",
     "short_name": "Matrix",
-    "description": "A web prograam to edit matrix files for Q-Rex",
-    "start_url": "/",
-    "scope": "/",
+    "description": "A web program to edit matrix files for Q-Rex",
+    "start_url": "./",
+    "scope": "./",
     "display": "standalone",
     "display_override": ["tabbed"],
     "theme_color": "#004D9F",
@@ -23,7 +23,7 @@
     ],
     "file_handlers": [
         {
-            "action": "/",
+            "action": "./",
             "accept": {
                 "text/xml": [
                     ".matrix"
