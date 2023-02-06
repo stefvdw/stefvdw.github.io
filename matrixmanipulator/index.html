@@ -1,251 +1,307 @@
 <html>
-	<head>
-		<title>Matrix maker</title>
-		<style>s
-			form {
-				display: flex;
-				flex-direction: column;
-				margin: auto;
-				max-width: fit-content;
-			}
-			fieldset, hr {
-				/* border: none; */
-				border: 1px solid grey;
-			}
-			table {
-				border-collapse: collapse;
-				/* border: 1px solid grey; */
-				margin: auto;
-			}
-			td, input[type="number"] {
-				text-align: center;
-				width: 100px;
-				height: 50px;
-				font-size: 1.3em;
-				border: 1px solid gray;
-			}
+<head>
+    <title>Matrix maker</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/matrix.png">
+    <link rel="icon" href="/matrix.svg" type="image/svg+xml">
+    <style>
+        
+    </style>
+    <script type="module">
+        import matrix from '/matrix.mjs'
+        import file from '/file.mjs'  
+        
+        matrix.addEventListener('load', render)
+    
+        
+        const form = document.forms['matrixform']
 
-			.rotate {
-				transform: rotate(-90deg); 
-			}
-		</style>
-		<script type="module">
+        form.addEventListener('change', saveCoefficients)
+        
+        navigation.addEventListener('navigate', event => {
+            event.intercept({
+                async handler() {
+                    // Fetch the new content and display when ready
+                    console.log('intrecept navigation')
+                    await Promise.resolve()
+                }
+            })
+        })
 
-			const form = document.forms[0]
-            const parser = new DOMParser()
-            const reader = new FileReader()
-
-			loadFactors()
-
-			document.getElementById('matrixform').onsubmit = CreateAndDownload
-			document.addEventListener('change', saveFactors)
-            document.getElementById('uploadMatrixField').onchange = loadMatrixFromFile
-
-            reader.onload = parseXML
-
-			const matrixConfig = {
-					standard96: {
-						filename: 'Standard 96.matrix',
-						template: 'standard96.template'
-					},
-					standard384: {
-						filename: 'Standard 384.matrix',
-						template: 'standard384.template'
-					},
-					standard96old: {
-						filename: 'Standard 96 old.matrix',
-						template: 'standard96old.template'
-					},
-                    standard384old: {
-						filename: 'Standard 384 old.matrix',
-						template: 'standard384old.template'
-					}
-				}
-
-            function loadMatrixFromFile(event) {
-                let file = event.target.files.item(0)
-                console.log(file)
-                if (!file) return
-                reader.readAsText(file)
-            }
-
-            function parseXML() {
-                const xml = parser.parseFromString( reader.result, "application/xml")
-                let coefficients = xml.getElementsByTagName('Coefficient')
-                for (const coefficient of coefficients) {
-                    debugger
-                    console.log(coefficient.getAttribute('Origin'))
-                    console.log(coefficient.getAttribute('Affected'))
-                    console.log(coefficient.getAttribute('Factor'))
+        render()
+        
+        function render() {
+            const coefficientInputFields = form.elements['coefficients'].elements
+            if(matrix.fileHandle) {
+                for (const el of coefficientInputFields) {
+                    el.disabled = true
                 }
             }
-
-            function getCoefficientFromXML(coefficient) {
-
+            for (const coefficient of matrix.coefficients) {
+                const {origin, affected, factor} = coefficient
+                const key = `${origin}into${affected}`
+                coefficientInputFields[key].value = factor || 0
+                coefficientInputFields[key].disabled = false
             }
 
-			async function CreateAndDownload(event) {
-				event.preventDefault()
-				const configType = event.submitter.value.toString() || 'standard96'
-				console.log(configType)
-
-				let {filename, template} = matrixConfig[configType]
-
-				let templatecontent = await getTemplateContent(template)
-
-				templatecontent = addFactorsToTemplate(templatecontent)
-							
-				const serializer = new XMLSerializer()
-				const xml = serializer.serializeToString(templatecontent)
-                const data = new FormData(form)
-                if(data.get('name')?.trim()) {
-                    filename = data.get('name')?.trim() + '.matrix'
+            form.elements['name'].value = matrix.name ? matrix.name : null
+            form.elements['type'].value = matrix.type
+        }
+        
+        function saveCoefficients() {
+            for (const el of form.elements) {
+                const [origin, affected] = el.name.split('into')
+                for (const coefficient of matrix.coefficients) {
+                    if(coefficient.origin != origin || coefficient.affected != affected) continue
+                    coefficient.coefficient.setAttribute('Factor', el.value * -1)
                 }
-				downloadXML(xml, filename)
-			}
+            }
+            matrix.name = form.elements['name'].value
+            matrix.type = form.elements['type'].value
+        }
+        
+        const recentList = document.querySelector('#recentList')
+        for (const recent of await matrix.recents) {
+            const recentButton = document.createElement('button')
+            recentButton.type = "button"
+            recentButton.classList.add('recent')
+            recentButton.onclick = () => matrix.open(recent.handle)
+            recentButton.innerText = recent.name
+            recentList.append(recentButton)
+        }
+        
+        
+        document.getElementById('open').onclick = async () => {
+            await matrix.open()
+            console.log(matrix)
+            render()
+        }
+        
+        document.getElementById('save').onclick = async (e) => {
+            saveCoefficients()
+            await matrix.save()
+        }
+        
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.mjs');
+        }
+        
+        
+    </script>
+    <style>
+        :root {
+            --background-color-dark: #004D9F;
+            --theme-color: #1B3067;
+            --accent-color: #E0003C;
+            --background-color: #FFFFFF;
+            --text-color-header: #FFFFFF;
+            accent-color: var(--theme-color);
+        }
+        
+        * {
+            text-decoration: None;
+            margin: 0;
+            font-family: Roboto;
+            background: none;
+            border: none;
+        }
+        
+        html {
+            background-color: var(--background-color-dark);
+        }
+        
+        body {
+            background-color: var(--background-color-dark);
+            display: flex;
+        }
 
-			function addFactorsToTemplate(template) {
-				const data = new FormData(form)
-				for (const coefficient of template.querySelectorAll('[Factor]')) {
-					console.log(coefficient)
-					let factor = data.get(coefficient.getAttribute("Factor")) * -1
-					if (!factor) {
-						factor = 0
-					}
-					coefficient.setAttribute('Factor', factor)
-				}
+        form {
+            display: flex;
+            flex-direction: column;
+            margin: auto;
+            max-width: fit-content;
+            gap: 1rem;
+        }
 
-				if(data.get('name')?.trim()) {
-					template.querySelector('CoefficientFactors').setAttribute('Name', data.get('name')?.trim())
-				}
+        fieldset {
+            display: contents;
+        }
 
-				return template
-			}
+        table {
+            border-collapse: collapse;
+            margin: auto;
+        }
 
-			function downloadXML(xml, filename) {
-				const pom = document.createElement('a')
-				const bb = new Blob([xml], {type: 'text/plain'})
-				
-				pom.setAttribute('href', window.URL.createObjectURL(bb))
-				pom.setAttribute('download', filename)
-				
-				pom.dataset.downloadurl = ['text/plain', pom.download, pom.href].join(':')
-				pom.draggable = true
-				pom.classList.add('dragout')
-				pom.click()
-			}
+        td, input[type="number"] {
+            text-align: center;
+            width: 100px;
+            height: 50px;
+            font-size: 1.3em;
+            margin: 0;
+            border: 1px solid gray;
+        }
 
-			async function getTemplateContent(template) {
-				const result = await fetch(template)
-				let templatecontent = await result.text()
-				
-				return parser.parseFromString(templatecontent, 'text/xml')
-			}
-
-			function saveFactors() {
-				const data = new FormData(form)
-				for (const [key, val] of data.entries()) {
-					localStorage.setItem(key, val)
-				}
-			}
-
-			function loadFactors() {
-				const data = new FormData(form)
-				for (const key of data.keys()) {
-					let val = localStorage.getItem(key)
-					if(form.elements[key].type == 'number') {
-						form.elements[key].value = val || 0
-					} else {
-						form.elements[key].value = val?.trim() || ''
-					}
-				}
-			}
-				
-				
-		</script>
-	</head>
-	<body>
-		<form id="matrixform">
-
-            <fieldset hidden>
-				<legend>Load matrix:</legend>
-                <label>
-                    <input type="file" id="uploadMatrixField" accept="xml/*,.matrix">
+        label {
+            display: flex;
+            align-items: center;
+            flex: 100% 0 1;
+            border-bottom: 1px solid var(--accent-color);
+        }
+        
+        input, select {
+            font-size: 1.1em;
+            padding: 0.5rem;
+            flex: 100% 0 1;
+            outline: none;
+        }
+        
+        .rotate {
+            transform: rotate(-90deg); 
+        }
+        
+        nav {
+            border-radius: 0 1rem 1rem 0;
+            min-height: 3rem;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--theme-color);
+            z-index: 1;
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+        
+        nav button, nav a {
+            padding: 1rem 2rem;
+            color: #FFFFFF;
+            border-left: 5px solid transparent;
+            cursor: pointer;
+            text-align: center;
+            font-size: 1rem;
+        }
+        nav button:hover, nav a:hover {
+            border-left: 5px solid var(--accent-color);
+        }
+        
+        #recentList {
+            display: contents;
+        }
+        
+        #recentList:empty {
+            display: none;
+        }
+        
+        #recentList::before {
+            content: 'Recent files';
+            font-size: 0.7rem;
+            padding: 0.5rem;
+            text-align: center;
+            margin-top: auto;
+            border-bottom: 1px solid var(--accent-color);
+            color: var(--text-color-header)
+        }
+        
+        main {
+            border-radius: 0 1rem 1rem 0;
+            margin-left: -1rem;
+            padding: 1rem;
+            padding-left: 2rem;
+            background-color: var(--background-color);
+        }
+        
+        :disabled {
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a target="_blank" href="/">New</a>
+        <button id="open" type="button">Open</button>
+        <button id="save" type="button">Save</button>
+        <!-- <label for="uploadMatrixField">Open</label> -->
+        <!-- <a href="/save">Save as</a> -->
+        <section id="recentList">
+            
+        </section>
+    </nav>
+    
+    <main>        
+        <form id="matrixform">
+            <fieldset id="options">
+                <!-- <legend>Options</legend> -->
+                <label>Name:<input name="name" placeholder="Matrix name" title="This is the name of the matrix that is shown to the user in the application"></label>
+                <!-- <br> -->
+                <label>Type:
+                    <select name="type">
+                        <option value="96" selected>96-Well Plate</option>
+                        <option value="384">384-well Plate</option>
+                    </select>
                 </label>
-			</fieldset>
-			
-			<fieldset>
-				<legend>Download as:</legend>
-				<button type="submit" value="standard96">Standard 96</button>
-				<button type="submit" value="standard96old">Standard 96 old</button>
-				<button type="submit" value="standard384">Standard 384</button>
-				<button type="submit" value="standard384old">Standard 384 old</button>
-				<hr>
-				<label>Alternative name in Q-Rex: <input type="text" name="name" placeholder="test matrix"></label>
-			</fieldset>
-			
-			<fieldset>
-				<legend>Matrix:</legend>
-				<table>
-					<thead>
-						<tr>
-							<th colspan="7">Origin</th>
-						</tr>
-						<tr>
-							<th></th>
-							<th></th>
-							<th>Blue</th>
-							<th>Green</th>
-							<th>Orange</th>
-							<th>Red</th>
-							<th>NIR1</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<th rowspan="6" class="rotate">Affected</th>
-							<th>Blue</th>
-							<td>1</td>
-							<td><input name="GreenIntoBlue" type="number" max="1" step="0.001" min="0" value="0.25"></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
-						<tr>
-							<th>Green</th>
-							<td><input name="BlueIntoGreen" type="number" max="1" step="0.001" min="0" value="0.25"></td>
-							<td>1</td>
-							<td><input name="OrangeIntoGreen" type="number" max="1" step="0.001" min="0" value="0.25"></td>
-							<td></td>
-							<td></td>
-						</tr>
-						<tr>
-							<th>Orange</th>
-							<td></td>
-							<td><input name="GreenIntoOrange" type="number" max="1" step="0.001" min="0" value="0.25"></td>
-							<td>1</td>
-							<td><input name="RedIntoOrange" type="number" max="1" step="0.001" min="0" value="0.25"></td>
-							<td></td>
-						</tr>
-						<tr>
-							<th>Red</th>
-							<td></td>
-							<td></td>
-							<td><input name="OrangeIntoRed" type="number" max="1" step="0.001" min="0" value="0.25"></td>
-							<td>1</td>
-							<td><input name="NIR1IntoRed" type="number" max="1" step="0.001" min="0" value="0.25"></td>
-						</tr>
-						<tr>
-							<th>NIR1</th>
-							<td></td>
-							<td></td>
-							<td><input name="OrangeIntoNIR1" type="number" max="1" step="0.001" min="0" value="0.25"></td>
-							<td><input name="RedIntoNIR1" type="number" max="1" step="0.001" min="0" value="0.25"></td>
-							<td>1</td>
-						</tr>
-					</tbody>
-				</table>
-			</fieldset>
-		</form>
-	</body>
+            </fieldset>
+            <fieldset id="coefficients">
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="7">Origin</th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th>Blue</th>
+                            <th>Green</th>
+                            <th>Orange</th>
+                            <th>Red</th>
+                            <th>NIR1</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th rowspan="6" class="rotate">Affected</th>
+                            <th>Blue</th>
+                            <td>1</td>
+                            <td><input name="GREENintoBLUE" type="number" max="1" step="0.001" min="0" value="0"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th>Green</th>
+                            <td><input name="BLUEintoGREEN" type="number" max="1" step="0.001" min="0" value="0"></td>
+                            <td>1</td>
+                            <td><input name="ORANGEintoGREEN" type="number" max="1" step="0.001" min="0" value="0"></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th>Orange</th>
+                            <td></td>
+                            <td><input name="GREENintoORANGE" type="number" max="1" step="0.001" min="0" value="0"></td>
+                            <td>1</td>
+                            <td><input name="REDintoORANGE" type="number" max="1" step="0.001" min="0" value="0"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th>Red</th>
+                            <td></td>
+                            <td></td>
+                            <td><input name="ORANGEintoRED" type="number" max="1" step="0.001" min="0" value="0"></td>
+                            <td>1</td>
+                            <td><input name="NIR1intoRED" type="number" max="1" step="0.001" min="0" value="0"></td>
+                        </tr>
+                        <tr>
+                            <th>NIR1</th>
+                            <td></td>
+                            <td></td>
+                            <td><input name="ORANGEintoNIR1" type="number" max="1" step="0.001" min="0" value="0"></td>
+                            <td><input name="REDintoNIR1" type="number" max="1" step="0.001" min="0" value="0"></td>
+                            <td>1</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </fieldset>
+        <pre></pre>
+    </main>
+    
+</body>
 </html>
