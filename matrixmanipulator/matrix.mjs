@@ -1,4 +1,4 @@
-import File from '/file.mjs'
+import File from './file.mjs'
 
 class Matrix extends File {
     constructor() {

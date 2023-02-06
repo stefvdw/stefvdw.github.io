@@ -1,4 +1,4 @@
-import IDB from '/idb.mjs'
+import IDB from './idb.mjs'
 
 export default class File extends EventTarget {
     constructor(options = {multiple: false}) {
