@@ -19,6 +19,16 @@
         document.getElementById('open').onclick = open
         document.getElementById('save').onclick = () => save(false)
         document.getElementById('saveAs').onclick = () => save(true)
+        document.addEventListener('keydown', e => {
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                save()
+            }
+            if (e.ctrlKey && e.key === 'o') {
+                e.preventDefault();
+                open()
+            }
+        })
         
         render()
         
