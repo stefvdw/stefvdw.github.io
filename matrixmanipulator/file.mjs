@@ -55,17 +55,13 @@ export default class File extends EventTarget {
     }
 
     async loadFile() {
-        try {
-            if(!this.fileHandle) throw new Error('No file handle')
-            console.log(`Opening ${this.fileHandle.name}`)
-            const file = await this.fileHandle.getFile()
-            this.content = await file.text()
-            this.dispatchEvent(new Event('load'))
-            await this.storeHandle()
-            return this.content
-        } catch (error) {
-            alert(error)
-        }
+        if(!this.fileHandle) throw new Error('No file handle')
+        console.log(`Opening ${this.fileHandle.name}`)
+        const file = await this.fileHandle.getFile()
+        this.content = await file.text()
+        this.dispatchEvent(new Event('load'))
+        await this.storeHandle()
+        return this.content
     }
 
     async open(handle) {
@@ -78,21 +74,15 @@ export default class File extends EventTarget {
     }
 
     async save() {
-        try {
-            if(!this.fileHandle) {
-                this.fileHandle = await window.showSaveFilePicker(this.options)
-            }
-            if(!await this.verifyPermission(this.fileHandle, true)) throw new Error('No file read write permission')
-            const writable = await this.fileHandle.createWritable()
-            await writable.write(this.content)
-            await writable.close()
-            this.dispatchEvent(new Event('saved'))
-            await this.storeHandle()
-        } catch (error) {
-            alert(error)
-        } finally {
-            console.log('done')
+        if(!this.fileHandle) {
+            this.fileHandle = await window.showSaveFilePicker(this.options)
         }
+        if(!await this.verifyPermission(this.fileHandle, true)) throw new Error('No file read write permission')
+        const writable = await this.fileHandle.createWritable()
+        await writable.write(this.content)
+        await writable.close()
+        this.dispatchEvent(new Event('saved'))
+        await this.storeHandle()
     }
 
     async verifyPermission(readWrite) {
