@@ -9,8 +9,8 @@ class Matrix extends File {
     }
 
     get content() {
-        if(this.xml?.documentElement) {
-            return new XMLSerializer().serializeToString(this.xml.documentElement)
+        if(this.xml) {
+            return new XMLSerializer().serializeToString(this.xml)
         } else {
             return undefined
         }
