@@ -7,12 +7,20 @@
     "scope": "./",
     "display": "standalone",
     "display_override": ["tabbed"],
-    "theme_color": "#004D9F",
+    "theme_color": "#1B3067",
     "background_color": "#FFFFFF",
     "orientation": "any",
     "icons": [
         {
             "src": "matrix-blue.png",
+            "sizes": "256x256"
+        },
+        {
+            "src": "matrix.ico",
+            "sizes": "16x16 32x32 48x48 64x64 128x128 256x256"
+        },
+        {
+            "src": "matrix-blue.ico",
             "sizes": "256x256"
         },
         {
