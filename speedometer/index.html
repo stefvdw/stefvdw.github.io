@@ -7,71 +7,7 @@
     <title>Speed-o-meter</title>
     <base href="/">
     <script type="module">
-        let id
-
-        const trackSpeed = document.getElementById('trackSpeed')
-        trackSpeed.addEventListener('input', toggleTracking)
-
-        const options = {
-            enableHighAccuracy: true,
-            timeout: 5000,
-            maximumAge: 0,
-        }
-
-        function toggleTracking(event) {
-            if(trackSpeed.checked) {
-                id = navigator.geolocation.watchPosition(render, error, options)
-                console.log('tracking started', id)
-            } else {
-                if(!id) return
-                navigator.geolocation.clearWatch(id)
-                console.log('tracking stopped')
-            }
-        }
-
-
-        
-        function error(error) {
-            alert(error)
-        }
-
-        function render(position) {
-            const {accuracy, altitude, altitudeAccuracy, heading, latitude, longitude, speed} = position.coords
-            const properties = {accuracy, altitude, altitudeAccuracy, heading, latitude, longitude, speed}
-
-            for (const [key, value] of Object.entries(properties)) {
-                console.log(key, value)
-            } 
-
-            
-            document.getElementById('speed').value = speed ? speed : 0
-            draw(speed)
-        }
-
-       function draw(speed) {
-            if(!speed) return
-            const canvas = document.getElementById("speed-o-meter")
-            const ctx = canvas.getContext("2d")
-            ctx.font = "50px Roboto"
-            ctx.textAlign = "center"
-            ctx.textBaseline = "middle"
-            ctx.fillText(speed.toFixed(2), canvas.width / 2, canvas.height / 2, 100)
-            ctx.beginPath()
-            ctx.lineCap = "round"
-            ctx.strokeStyle = "grey";
-            ctx.lineWidth = 15
-            ctx.arc(canvas.width / 2, canvas.height / 2, 100, (0.75) * Math.PI, (0.25) * Math.PI)
-            ctx.stroke()
-
-            ctx.beginPath()
-            ctx.strokeStyle = "teal"
-            ctx.lineWidth = 10
-
-            console.log(0.75 + (speed / 200), speed/200)
-            ctx.arc(canvas.width / 2, canvas.height / 2, 100, (0.75) * Math.PI, ((speed / 200) + 0.75) * Math.PI)
-            ctx.stroke()
-
-        }
+        import SpeedOMeter from '/speed-o-meter.mjs'     
 
     </script>
     <style>
@@ -92,7 +28,7 @@
         <input type="checkbox" id="trackSpeed">
     </label>
 
-    <canvas id="speed-o-meter" width="300" height="300"></canvas>
+    <canvas is="speed-o-meter" width="300" height="300"></canvas>
     <label><progress id="speed" max="300" value="0"></progress></label>
     
     <details>
