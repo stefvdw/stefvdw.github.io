@@ -9,10 +9,22 @@
     <script type="module">
         let id
 
+        const trackSpeed = document.getElementById('trackSpeed')
+        trackSpeed.addEventListener('update', toggleTracking)
+
         const options = {
             enableHighAccuracy: true,
             timeout: 5000,
             maximumAge: 0,
+        }
+
+        function toggleTracking(event) {
+            if(trackSpeed.checked) {
+                if(!id) return
+                navigator.geolocation.clearWatch(id)
+            } else {
+                id = navigator.geolocation.watchPosition(render, error, options)
+            }
         }
 
 
@@ -30,14 +42,7 @@
             
             document.getElementById('speed').value = speed ? speed : 0
         }
-
-        function start() {
-            id = navigator.geolocation.watchPosition(render, error, options)
-        }
-
-        function stop() {
-            navigator.geolocation.clearWatch(id)
-        }
+        
     </script>
     <style>
         body {
@@ -49,7 +54,9 @@
 </head>
 
 <body>
-
+    <label> Track speed: 
+        <checkbox id="trackSpeed"></checkbox>
+    </label>
     <progress id="speed" max="300" value="0"></progress>
     <details>
         <summary>Details</summary>
