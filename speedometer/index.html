@@ -52,14 +52,26 @@
             if(!speed) return
             const canvas = document.getElementById("speed-o-meter")
             const ctx = canvas.getContext("2d")
-            ctx.font = "50px Roboto";
+            ctx.font = "50px Roboto"
             ctx.textAlign = "center"
-            ctx.textBaseline = "middle";
+            ctx.textBaseline = "middle"
             ctx.fillText(speed.toFixed(2), canvas.width / 2, canvas.height / 2, 100)
+            ctx.beginPath()
+            ctx.lineCap = "round"
+            ctx.strokeStyle = "grey";
+            ctx.lineWidth = 15
+            ctx.arc(canvas.width / 2, canvas.height / 2, 100, (0.75) * Math.PI, (0.25) * Math.PI)
+            ctx.stroke()
+
+            ctx.beginPath()
+            ctx.strokeStyle = "teal"
+            ctx.lineWidth = 10
+
+            console.log(0.75 + (speed / 200), speed/200)
+            ctx.arc(canvas.width / 2, canvas.height / 2, 100, (0.75) * Math.PI, ((speed / 200) + 0.75) * Math.PI)
+            ctx.stroke()
 
         }
-
-        draw(500.28)
 
     </script>
     <style>
