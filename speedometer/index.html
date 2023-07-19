@@ -45,7 +45,21 @@
 
             
             document.getElementById('speed').value = speed ? speed : 0
+            draw(speed)
         }
+
+       function draw(speed) {
+            if(!speed) return
+            const canvas = document.getElementById("speed-o-meter")
+            const ctx = canvas.getContext("2d")
+            ctx.font = "50px Roboto";
+            ctx.textAlign = "center"
+            ctx.textBaseline = "middle";
+            ctx.fillText(speed.toFixed(2), canvas.width / 2, canvas.height / 2, 100)
+
+        }
+
+        draw(500.28)
 
     </script>
     <style>
@@ -54,6 +68,10 @@
             align-items: center;
             flex-direction: column;
         }
+        
+        label, details {
+            min-height: 3rem;
+        }
     </style>
 </head>
 
@@ -61,10 +79,13 @@
     <label> Track speed: 
         <input type="checkbox" id="trackSpeed">
     </label>
-    <progress id="speed" max="300" value="0"></progress>
+
+    <canvas id="speed-o-meter" width="300" height="300"></canvas>
+    <label><progress id="speed" max="300" value="0"></progress></label>
+    
     <details>
         <summary>Details</summary>
-        <pre id="details"></pre>
+        <label><output name="accuracy"></output></label>
     </details>
 
 </body>
