@@ -1,0 +1,41 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+    <title>Speed-o-meter</title>
+    <base href="/">
+    <script type="module">
+        const options = {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0,
+        }
+
+        navigator.geolocation.watchPosition(render, error, options);
+        function error(error) {
+            alert(error)
+        }
+
+        function render(position) {
+            console.log(position)
+            const speed = position.coords.speed
+            
+            document.body.innerText = speed ? speed : 'Geen snelheid gevonden'
+        }
+    </script>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+    </style>
+</head>
+
+<body>
+    
+</body>
+
+</html>
