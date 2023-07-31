@@ -9,6 +9,7 @@ export default class SpeedOMeter extends HTMLCanvasElement {
         this.ctx = this.getContext("2d")
         this.ctx.font = "50px Roboto"
         this.ctx.textAlign = "center"
+        this.ctx.fillStyle = "CanvasText"
         this.ctx.textBaseline = "middle"
         this.ctx.lineCap = "round"
     }
