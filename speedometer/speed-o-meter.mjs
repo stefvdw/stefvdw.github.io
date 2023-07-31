@@ -51,7 +51,7 @@ export default class SpeedOMeter extends HTMLCanvasElement {
         this.clear()
         this.drawText(speed.toFixed(2))
         this.arc()
-        this.arc(speed, 'teal', 10)
+        this.arc(speed/this.max, 'teal', 10)
 
         console.log(0.75 + (speed / 200), speed/200)
     }
@@ -64,12 +64,18 @@ export default class SpeedOMeter extends HTMLCanvasElement {
         this.ctx.fillText(text, this.width / 2, this.height / 2, 100)
     }
 
-    arc(points = 300, color = 'lightgrey', width = 15) {
+    arc(percent = 1, color = 'lightgrey', width = 15) {
         this.ctx.beginPath()
         this.ctx.strokeStyle = color
         this.ctx.lineWidth = width
         // this.ctx.arc(this.width / 2, this.height / 2, 100, (0.75) * Math.PI, (0.25) * Math.PI)
-        this.ctx.arc(this.width / 2, this.height / 2, 100, (0.75) * Math.PI, ((points / 200) + 0.75) * Math.PI)
+
+        const start = (0.75) * Math.PI
+        const end = percent * (3/2 * Math.PI)
+        
+        // this.ctx.arc(this.width / 2, this.height / 2, 100, (0.75) * Math.PI, ((points / 200) + 0.75) * Math.PI)
+
+        this.ctx.arc(this.width / 2, this.height / 2, 100, start, start + end)
         this.ctx.stroke()
     }
 }
