@@ -6,6 +6,11 @@ export default class SpeedOMeter extends HTMLCanvasElement {
 
     constructor() {
         super()
+        this.ctx = this.getContext("2d")
+        this.ctx.font = "50px Roboto"
+        this.ctx.textAlign = "center"
+        this.ctx.textBaseline = "middle"
+        this.ctx.lineCap = "round"
     }
 
     connectedCallback() {
@@ -43,39 +48,30 @@ export default class SpeedOMeter extends HTMLCanvasElement {
 
     draw() {
         const speed = this.speed || 0 // set to default
-        const ctx = this.getContext("2d")
         this.clear()
         this.drawText(speed.toFixed(2))
-        
-        ctx.beginPath()
-        ctx.lineCap = "round"
-        ctx.strokeStyle = "lightgrey";
-        ctx.lineWidth = 15
-        ctx.arc(this.width / 2, this.height / 2, 100, (0.75) * Math.PI, (0.25) * Math.PI)
-        ctx.stroke()
-
-        ctx.beginPath()
-        ctx.strokeStyle = "teal"
-        ctx.lineWidth = 10
+        this.arc()
+        this.arc(speed, 'teal', 10)
 
         console.log(0.75 + (speed / 200), speed/200)
-        ctx.arc(this.width / 2, this.height / 2, 100, (0.75) * Math.PI, ((speed / 200) + 0.75) * Math.PI)
-        ctx.stroke()
     }
 
     clear() {
-        const ctx = this.getContext("2d")
-        ctx.clearRect(0, 0, this.width, this.height)
+        this.ctx.clearRect(0, 0, this.width, this.height)
     }
 
     drawText(text) {
-        ctx.font = "50px Roboto"
-        ctx.textAlign = "center"
-        ctx.textBaseline = "middle"
-        ctx.fillText(text, this.width / 2, this.height / 2, 100)
+        this.ctx.fillText(text, this.width / 2, this.height / 2, 100)
     }
 
-
+    arc(points = 300, color = 'lightgrey', width = 15) {
+        this.ctx.beginPath()
+        this.ctx.strokeStyle = color
+        this.ctx.lineWidth = width
+        this.ctx.arc(this.width / 2, this.height / 2, 100, (0.75) * Math.PI, (0.25) * Math.PI)
+        this.ctx.arc(this.width / 2, this.height / 2, 100, (0.75) * Math.PI, ((points / 200) + 0.75) * Math.PI)
+        this.ctx.stroke()
+    }
 }
 
 window.customElements.define('speed-o-meter', SpeedOMeter, {extends: 'canvas'})
