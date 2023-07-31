@@ -10,11 +10,26 @@
 
     </script>
     <style>
-        :root {
+        html { 
+            --brand: hotpink;
+            scrollbar-color: hotpink Canvas;
             color-scheme: light dark;
-            accent-color: hotpink;
         }
 
+        :root { accent-color: var(--brand); }
+        :focus-visible { outline-color: var(--brand); }
+        ::selection { background-color: var(--brand); }
+        ::marker { color: var(--brand); }
+
+        :is(
+            ::-webkit-calendar-picker-indicator,
+            ::-webkit-clear-button,
+            ::-webkit-inner-spin-button, 
+            ::-webkit-outer-spin-button
+        ) {
+            color: var(--brand);
+        }
+       
         body {
             display: grid;
             height: 100dvh;
@@ -27,7 +42,7 @@
         }
 
         header, footer {
-            background-color: teal;
+            background-color: AccentColor;
             display: flex;
             justify-items: space-between;
             min-height: 3rem;
