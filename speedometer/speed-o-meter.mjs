@@ -48,7 +48,7 @@ export default class SpeedOMeter extends HTMLCanvasElement {
     }
 
     update(position) {
-        this.speed = position.coords.speed * 3.6 // convert m/s to km/h
+        this.speed = (position.coords.speed * 3.6).toFixed(1) // convert m/s to km/h
         this.draw()
     }
 
@@ -56,7 +56,7 @@ export default class SpeedOMeter extends HTMLCanvasElement {
         const speed = this.speed || 0 // set to default
         this.clear()
         this.arc()
-        this.drawText(speed.toFixed(2))
+        this.drawText(speed)
         this.arc(speed/this.max, this.color, 10)
     }
 
