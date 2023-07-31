@@ -3,13 +3,15 @@ export default class SpeedOMeter extends HTMLCanvasElement {
     speed = 0
     max = 300
     trackerId
+    color = "teal"
 
     constructor() {
         super()
+        this.color =  getComputedStyle(html).getPropertyValue("--brand");
         this.ctx = this.getContext("2d")
         this.ctx.font = "50px Roboto"
         this.ctx.textAlign = "center"
-        this.ctx.fillStyle = "currentcolor" //getComputedStyle(html).getPropertyValue("--brand");
+        this.ctx.fillStyle = this.color
         this.ctx.textBaseline = "middle"
         this.ctx.lineCap = "round"
     }
@@ -55,9 +57,7 @@ export default class SpeedOMeter extends HTMLCanvasElement {
         this.clear()
         this.arc()
         this.drawText(speed.toFixed(2))
-        this.arc(speed/this.max, 'teal', 10)
-
-        console.log(0.75 + (speed / 200), speed/200)
+        this.arc(speed/this.max, this.color, 10)
     }
 
     clear() {
