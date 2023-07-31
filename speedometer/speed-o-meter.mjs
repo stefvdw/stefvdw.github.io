@@ -10,6 +10,7 @@ export default class SpeedOMeter extends HTMLCanvasElement {
 
     connectedCallback() {
         this.addEventListener('click', this.toggleTracking.bind(this))
+        this.draw()
     }
 
     toggleTracking(event) {
@@ -22,7 +23,7 @@ export default class SpeedOMeter extends HTMLCanvasElement {
             timeout: 5000,
             maximumAge: 0,
         }
-        this.trackerId = navigator.geolocation.watchPosition(this.draw.bind(this), alert, options)
+        this.trackerId = navigator.geolocation.watchPosition(this.update.bind(this), alert, options)
         console.log('tracking started', this.trackerId)
     }
 
@@ -33,8 +34,12 @@ export default class SpeedOMeter extends HTMLCanvasElement {
         console.log('tracking stopped')
     }
 
-    draw(position) {
+    update(position) {
         this.speed = position.coords.speed
+        this.draw()
+    }
+
+    draw() {
         if(!this.speed) return
         const ctx = this.getContext("2d")
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
