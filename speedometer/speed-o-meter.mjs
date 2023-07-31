@@ -40,13 +40,12 @@ export default class SpeedOMeter extends HTMLCanvasElement {
     }
 
     draw() {
-        if(!this.speed) return
         const ctx = this.getContext("2d")
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
         ctx.font = "50px Roboto"
         ctx.textAlign = "center"
         ctx.textBaseline = "middle"
-        ctx.fillText(this.speed.toFixed(2), this.canvas.width / 2, this.canvas.height / 2, 100)
+        ctx.fillText((this.speed || 0).toFixed(2), this.canvas.width / 2, this.canvas.height / 2, 100)
         ctx.beginPath()
         ctx.lineCap = "round"
         ctx.strokeStyle = "grey";
