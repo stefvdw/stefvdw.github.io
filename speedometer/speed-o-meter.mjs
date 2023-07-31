@@ -68,7 +68,7 @@ export default class SpeedOMeter extends HTMLCanvasElement {
         this.ctx.beginPath()
         this.ctx.strokeStyle = color
         this.ctx.lineWidth = width
-        this.ctx.arc(this.width / 2, this.height / 2, 100, (0.75) * Math.PI, (0.25) * Math.PI)
+        // this.ctx.arc(this.width / 2, this.height / 2, 100, (0.75) * Math.PI, (0.25) * Math.PI)
         this.ctx.arc(this.width / 2, this.height / 2, 100, (0.75) * Math.PI, ((points / 200) + 0.75) * Math.PI)
         this.ctx.stroke()
     }
