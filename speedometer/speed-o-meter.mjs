@@ -9,7 +9,7 @@ export default class SpeedOMeter extends HTMLCanvasElement {
         this.ctx = this.getContext("2d")
         this.ctx.font = "50px Roboto"
         this.ctx.textAlign = "center"
-        this.ctx.fillStyle = "currentcolor" //getComputedStyle(canvas).getPropertyValue("--brand");
+        this.ctx.fillStyle = "currentcolor" //getComputedStyle(html).getPropertyValue("--brand");
         this.ctx.textBaseline = "middle"
         this.ctx.lineCap = "round"
     }
