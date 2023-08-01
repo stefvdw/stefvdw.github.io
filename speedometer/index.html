@@ -8,6 +8,12 @@
     <script type="module">
         import SpeedOMeter from './speed-o-meter.mjs'
 
+        document.forms['settings'].addEventListener('input', updateSettings)
+
+        function updateSettings(event) {
+            console.log(event.target.name)
+        }
+
         let lastLog = new Date()
         
         document.querySelector('canvas').addEventListener('log', (event) => {
@@ -101,6 +107,10 @@
    <footer> 
        <details>
         <summary>Details</summary>
+        <form id="settings">
+            <label>Fullscreen <input type="checkbox" name="fullscreen"></label>
+            <label>Keep screen on <input type="checkbox" name="wakelock"></label>
+        </form>
         <dl class="log"></dl>
         
     </details></footer>
