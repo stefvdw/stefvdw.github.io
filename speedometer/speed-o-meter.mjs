@@ -10,6 +10,7 @@ export default class SpeedOMeter extends BaseCanvas {
     constructor() {
         super()
         this.fullscreen = true
+        this.wakelock = true
     }
 
     connectedCallback() {
