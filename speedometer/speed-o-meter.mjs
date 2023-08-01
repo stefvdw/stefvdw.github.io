@@ -33,13 +33,11 @@ export default class SpeedOMeter extends BaseCanvas {
             maximumAge: 0,
         }
         this.trackerId = navigator.geolocation.watchPosition(this.update.bind(this), alert, options)
-        this.addEventListener('click', this.stop.bind(this))
         this.log(`tracking started: ${this.trackerId}`)
     }
 
     stop() {
         super.stop()
-        this.removeEventListener('click', this.stop.bind(this))
         if(!this.trackerId) return
         navigator.geolocation.clearWatch(this.trackerId)
         this.trackerId = undefined
