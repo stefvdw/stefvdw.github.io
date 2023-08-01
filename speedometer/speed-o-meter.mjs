@@ -58,7 +58,7 @@ export default class SpeedOMeter extends BaseCanvas {
 
     drawText(text) {
         this.ctx.fillStyle = this.color
-        this.ctx.font = "20% Roboto"
+        this.ctx.font = "3rem Roboto"
         this.ctx.textAlign = "center"
         this.ctx.textBaseline = "middle"
         this.ctx.fillText(text, this.width / 2, this.height / 2)
