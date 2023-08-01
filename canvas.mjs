@@ -11,6 +11,12 @@ export default class BaseCanvas extends HTMLCanvasElement {
         this.ctx = this.getContext("2d")
     }
 
+    get wakelock() { return this.getAttribute('wakelock')}
+    set wakelock(value) { return this.setAttribute('wakelock', !!value)}
+
+    get fullscreen() { return this.getAttribute('fullscreen')}
+    set fullscreen(value) { return this.setAttribute('fullscreen', !!value)}
+
     connectedCallback() {
         this.addEventListener('fullscreenchange', this.handleFullscreen.bind(this))
         this.onclick = this.start.bind(this)
