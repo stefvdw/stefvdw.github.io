@@ -12,18 +12,18 @@ export default class BaseCanvas extends HTMLCanvasElement {
 
     connectedCallback() {
         this.addEventListener('fullscreenchange', this.handleFullscreen.bind(this))
-        this.addEventListener('click', this.start.bind(this))
+        this.onclick = this.start.bind(this)
     }
 
     start() {
-        this.removeEventListener('click', this.start.bind(this))
+        this.onclick = undefined
         if(this.fullscreen) {
             this.requestFullscreen()
         }
     }
 
     stop() {
-        this.addEventListener('click', this.start.bind(this))
+        this.onclick = this.start.bind(this)
 
         if(this == document.fullscreenElement) {
             document.exitFullscreen()
