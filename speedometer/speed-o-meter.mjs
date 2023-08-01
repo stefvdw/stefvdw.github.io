@@ -1,4 +1,6 @@
-export default class SpeedOMeter extends HTMLCanvasElement {
+import BaseCanvas from '/canvas.mjs'
+
+export default class SpeedOMeter extends BaseCanvas {
 
     speed = 0
     max = 300
@@ -8,7 +10,6 @@ export default class SpeedOMeter extends HTMLCanvasElement {
     constructor() {
         super()
         this.color =  getComputedStyle(document.documentElement).getPropertyValue("--brand");
-        this.ctx = this.getContext("2d")
         this.ctx.font = "50px Roboto"
         this.ctx.textAlign = "center"
         this.ctx.fillStyle = this.color
@@ -17,34 +18,31 @@ export default class SpeedOMeter extends HTMLCanvasElement {
     }
 
     connectedCallback() {
-        this.addEventListener('click', this.toggleTracking.bind(this))
         this.clear()
         this.drawText('click to start')
         this.arc()
     }
 
-    toggleTracking(event) {
-        this.trackerId ? this.stop() : this.start()
-    }
-
     start() {
+        super()
         const options = {
             enableHighAccuracy: true,
             timeout: 5000,
             maximumAge: 0,
         }
         this.trackerId = navigator.geolocation.watchPosition(this.update.bind(this), alert, options)
-        console.log('tracking started', this.trackerId)
+        this.log(`tracking started: ${this.trackerId}`)
     }
 
     stop() {
+        super()
         if(!this.trackerId) return
         navigator.geolocation.clearWatch(this.trackerId)
         this.trackerId = undefined
         this.clear()
         this.drawText('⏸︎')
         this.arc()
-        console.log('tracking stopped')
+        this.log('tracking stopped')
     }
 
     update(position) {
@@ -58,10 +56,6 @@ export default class SpeedOMeter extends HTMLCanvasElement {
         this.arc()
         this.drawText(speed)
         this.arc(speed/this.max, this.color, 10)
-    }
-
-    clear() {
-        this.ctx.clearRect(0, 0, this.width, this.height)
     }
 
     drawText(text) {
