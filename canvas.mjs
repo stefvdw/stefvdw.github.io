@@ -23,6 +23,10 @@ export default class BaseCanvas extends HTMLCanvasElement {
 
     stop() {
         this.addEventListener('click', this.start.bind(this))
+
+        if(this == document.fullscreenElement) {
+            document.exitFullscreen()
+        }
     }
 
     clear() {
