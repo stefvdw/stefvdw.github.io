@@ -73,7 +73,7 @@ export default class SpeedOMeter extends BaseCanvas {
         const start = (0.75) * Math.PI
         const end = percent * (3/2 * Math.PI) // percentage of 3/4 circle
 
-        this.ctx.arc(this.width / 2, this.height / 2, Math.min(this.height, this.width) * 0.45, start, start + end)
+        this.ctx.arc(this.width / 2, this.height / 2, Math.min(this.height, this.width) * 0.4, start, start + end)
         this.ctx.stroke()
     }
 }
