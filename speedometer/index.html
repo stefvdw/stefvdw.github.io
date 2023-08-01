@@ -8,7 +8,7 @@
     <script type="module">
         import SpeedOMeter from './speed-o-meter.mjs'
 
-        const lastLog = new Date()
+        let lastLog = new Date()
         
         document.querySelector('canvas').addEventListener('log', (event) => {
             console.log(event.detail)
