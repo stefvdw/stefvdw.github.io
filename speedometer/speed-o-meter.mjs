@@ -24,7 +24,7 @@ export default class SpeedOMeter extends BaseCanvas {
     }
 
     start() {
-        super()
+        super.start()
         const options = {
             enableHighAccuracy: true,
             timeout: 5000,
@@ -35,7 +35,7 @@ export default class SpeedOMeter extends BaseCanvas {
     }
 
     stop() {
-        super()
+        super.stop()
         if(!this.trackerId) return
         navigator.geolocation.clearWatch(this.trackerId)
         this.trackerId = undefined
