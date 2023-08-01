@@ -14,14 +14,6 @@ export default class SpeedOMeter extends BaseCanvas {
 
     connectedCallback() {
         super.connectedCallback()
-        
-        this.color = getComputedStyle(document.documentElement).getPropertyValue("--brand") || this.color;
-        this.ctx.font = "20% Roboto"
-        this.ctx.textAlign = "center"
-        this.ctx.fillStyle = this.color
-        this.ctx.textBaseline = "middle"
-        this.ctx.lineCap = "round"
-
         this.clear()
         this.drawText('click to start')
         this.arc()
@@ -35,6 +27,14 @@ export default class SpeedOMeter extends BaseCanvas {
             maximumAge: 0,
         }
         this.trackerId = navigator.geolocation.watchPosition(this.update.bind(this), alert, options)
+
+        this.color = getComputedStyle(document.documentElement).getPropertyValue("--brand") || this.color;
+        this.ctx.font = "20% Roboto"
+        this.ctx.textAlign = "center"
+        this.ctx.fillStyle = this.color
+        this.ctx.textBaseline = "middle"
+        this.ctx.lineCap = "round"
+        
         this.log(`tracking started: ${this.trackerId}`)
     }
 
