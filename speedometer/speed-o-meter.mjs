@@ -19,8 +19,8 @@ export default class SpeedOMeter extends BaseCanvas {
         this.arc()
     }
 
-    start() {
-        super.start()
+    async start() {
+        await super.start()
         const options = {
             enableHighAccuracy: true,
             timeout: 5000,
@@ -32,8 +32,8 @@ export default class SpeedOMeter extends BaseCanvas {
         this.log(`tracking started: ${this.trackerId}`)
     }
 
-    stop() {
-        super.stop()
+    async stop() {
+        await super.stop()
         if(!this.trackerId) return
         navigator.geolocation.clearWatch(this.trackerId)
         this.trackerId = undefined

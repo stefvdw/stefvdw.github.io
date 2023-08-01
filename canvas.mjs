@@ -15,18 +15,18 @@ export default class BaseCanvas extends HTMLCanvasElement {
         this.onclick = this.start.bind(this)
     }
 
-    start() {
+    async start() {
         this.onclick = undefined
         if(this.fullscreen) {
-            this.requestFullscreen()
+            await this.requestFullscreen()
         }
     }
 
-    stop() {
+    async stop() {
         this.onclick = this.start.bind(this)
 
         if(this == document.fullscreenElement) {
-            document.exitFullscreen()
+            await document.exitFullscreen()
         }
     }
 
