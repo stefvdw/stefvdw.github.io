@@ -29,7 +29,7 @@ export default class BaseCanvas extends HTMLCanvasElement {
     async stop() {
         this.onclick = this.start.bind(this)
         if(this.wakelock && this.WakeLockSentinel && !this.WakeLockSentinel.released) {
-            await wakeLock.release()
+            await this.WakeLockSentinel.release()
             this.WakeLockSentinel = null
         }
         if(this == document.fullscreenElement) {
