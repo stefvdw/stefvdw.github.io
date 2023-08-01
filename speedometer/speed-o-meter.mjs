@@ -9,17 +9,19 @@ export default class SpeedOMeter extends BaseCanvas {
 
     constructor() {
         super()
+        this.fullscreen = true
+    }
+
+    connectedCallback() {
+        super.connectedCallback()
+        
         this.color =  getComputedStyle(document.documentElement).getPropertyValue("--brand");
         this.ctx.font = "50px Roboto"
         this.ctx.textAlign = "center"
         this.ctx.fillStyle = this.color
         this.ctx.textBaseline = "middle"
         this.ctx.lineCap = "round"
-        this.fullscreen = true
-    }
 
-    connectedCallback() {
-        super.connectedCallback()
         this.clear()
         this.drawText('click to start')
         this.arc()
