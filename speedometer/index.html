@@ -14,9 +14,13 @@
             console.log(event.detail)
             if((lastLog.getTime() / 1000).toFixed() < (Date.now() / 1000).toFixed()) {
                 lastLog = new Date()
-                document.querySelector('dl').append(`<dt>${new Date().toLocaleTimeString()}</dt>`)
+                const dt = document.createElement('dt')
+                dt.innerText = lastLog.toLocaleTimeString()
+                document.querySelector('dl').append(dt)
             }
-            document.querySelector('dl').append(`<dd>${event.detail}</dd>`)
+            const dd = document.createElement('dt')
+            dd.innerText = event.detail
+            document.querySelector('dl').append(dd)
         })
 
     </script>
