@@ -7,8 +7,17 @@
     <title>Speed-o-meter</title>
     <script type="module">
         import SpeedOMeter from './speed-o-meter.mjs'
+
+        const lastLog = new Date()
         
-        document.querySelector('canvas').addEventListener('log', (event) => console.log(event.detail))
+        document.querySelector('canvas').addEventListener('log', (event) => {
+            console.log(event.detail)
+            if((lastLog.getTime() / 1000).toFixed() < (Date.now() / 1000).toFixed()) {
+                lastLog = new Date()
+                document.querySelector('dl').append(`<dt>${new Date().toLocaleTimeString()}</dt>`)
+            }
+            document.querySelector('dl').append(`<dd>${event.detail}</dd>`)
+        })
 
     </script>
     <style>
@@ -63,7 +72,8 @@
    <footer> 
        <details>
         <summary>Details</summary>
-        <label><output name="accuracy"></output></label>
+        <dl></dl>
+        
     </details></footer>
 </body>
 
