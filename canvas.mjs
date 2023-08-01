@@ -10,10 +10,10 @@ export default class BaseCanvas extends HTMLCanvasElement {
     }
 
     get wakelock() { return this.hasAttribute('wakelock')}
-    set wakelock(value) { return this.setAttribute('wakelock', !!value)}
+    set wakelock(value) { return !!value ? this.setAttribute('wakelock', null) : this.removeAttribute('wakelock')}
 
     get fullscreen() { return this.hasAttribute('fullscreen')}
-    set fullscreen(value) { return this.setAttribute('fullscreen', !!value)}
+    set fullscreen(value) { return !!value ? this.setAttribute('fullscreen', null) : this.removeAttribute('fullscreen')}
 
     connectedCallback() {
         this.addEventListener('fullscreenchange', this.handleFullscreen.bind(this))
