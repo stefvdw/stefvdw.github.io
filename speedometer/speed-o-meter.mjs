@@ -27,14 +27,8 @@ export default class SpeedOMeter extends BaseCanvas {
             maximumAge: 0,
         }
         this.trackerId = navigator.geolocation.watchPosition(this.update.bind(this), alert, options)
-
-        this.color = getComputedStyle(document.documentElement).getPropertyValue("--brand") || this.color;
-        this.ctx.font = "20% Roboto"
-        this.ctx.textAlign = "center"
-        this.ctx.fillStyle = this.color
-        this.ctx.textBaseline = "middle"
-        this.ctx.lineCap = "round"
-        
+        this.color = getComputedStyle(document.documentElement).getPropertyValue("--brand") || this.color
+    
         this.log(`tracking started: ${this.trackerId}`)
     }
 
@@ -63,12 +57,17 @@ export default class SpeedOMeter extends BaseCanvas {
     }
 
     drawText(text) {
+        this.ctx.fillStyle = this.color
+        this.ctx.font = "20% Roboto"
+        this.ctx.textAlign = "center"
+        this.ctx.textBaseline = "middle"
         this.ctx.fillText(text, this.width / 2, this.height / 2)
     }
 
     arc(percent = 1, color = 'lightgrey', width = 15) {
         this.ctx.beginPath()
         this.ctx.strokeStyle = color
+        this.ctx.lineCap = "round"
         this.ctx.lineWidth = width
 
         const start = (0.75) * Math.PI
