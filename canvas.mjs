@@ -30,6 +30,8 @@ export default class BaseCanvas extends HTMLCanvasElement {
         }
         if(this.fullscreen) {
             await this.requestFullscreen()
+        } else {
+            this.onclick = this.stop.bind(this)
         }
     }
 
