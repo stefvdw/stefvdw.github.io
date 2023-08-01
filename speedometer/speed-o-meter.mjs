@@ -61,7 +61,7 @@ export default class SpeedOMeter extends BaseCanvas {
     }
 
     drawText(text) {
-        this.ctx.fillText(text, this.width / 2, this.height / 2, 100)
+        this.ctx.fillText(text, this.width / 2, this.height / 2)
     }
 
     arc(percent = 1, color = 'lightgrey', width = 15) {
