@@ -15,6 +15,7 @@ export default class SpeedOMeter extends BaseCanvas {
         this.ctx.fillStyle = this.color
         this.ctx.textBaseline = "middle"
         this.ctx.lineCap = "round"
+        this.fullscreen = true
     }
 
     connectedCallback() {
