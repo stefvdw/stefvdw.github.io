@@ -18,7 +18,7 @@
                 dt.innerText = lastLog.toLocaleTimeString()
                 document.querySelector('dl').append(dt)
             }
-            const dd = document.createElement('dt')
+            const dd = document.createElement('dd')
             dd.innerText = event.detail
             document.querySelector('dl').append(dd)
         })
@@ -67,6 +67,20 @@
         canvas {
             color: var(--brand);
         }
+
+        dl.log {
+            overflow-y: auto;
+            max-height: 30vh;
+            font-size: 0.8rem;
+            line-height: 1rem;
+        }
+
+        dt {
+            position: sticky;
+            top: 0;
+            display: inline-block;
+            background-color: canvas;
+        }
     </style>
 </head>
 
@@ -76,7 +90,7 @@
    <footer> 
        <details>
         <summary>Details</summary>
-        <dl></dl>
+        <dl class="log"></dl>
         
     </details></footer>
 </body>
