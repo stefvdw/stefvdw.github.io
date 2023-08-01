@@ -45,4 +45,4 @@ export default class BaseCanvas extends HTMLCanvasElement {
     }
 }
 
-window.customElements.define('base-Canvas', BaseCanvas, {extends: 'canvas'})
+window.customElements.define('base-canvas', BaseCanvas, {extends: 'canvas'})
