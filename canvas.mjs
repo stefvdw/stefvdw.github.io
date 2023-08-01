@@ -35,8 +35,8 @@ export default class BaseCanvas extends HTMLCanvasElement {
 
     handleFullscreen(event) {
         if(event.target == document.fullscreenElement) {
-            this.canvas.width = window.outerWidth
-            this.canvas.height = window.outerHeight
+            this.width = window.outerWidth
+            this.height = window.outerHeight
             this.log('fullscreen')
         } else {
             this.stop()
