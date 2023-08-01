@@ -18,6 +18,7 @@ export default class SpeedOMeter extends BaseCanvas {
     }
 
     connectedCallback() {
+        super.connectedCallback()
         this.clear()
         this.drawText('click to start')
         this.arc()
