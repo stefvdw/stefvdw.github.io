@@ -1,7 +1,5 @@
 export default class BaseCanvas extends HTMLCanvasElement {
 
-    fullscreen = false
-    wakelock = false
     frame = null
     originalSize = {}
     WakeLockSentinel = null
