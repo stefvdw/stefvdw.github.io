@@ -15,8 +15,8 @@ export default class SpeedOMeter extends BaseCanvas {
     connectedCallback() {
         super.connectedCallback()
         
-        this.color =  getComputedStyle(document.documentElement).getPropertyValue("--brand");
-        this.ctx.font = "50px Roboto"
+        this.color = getComputedStyle(document.documentElement).getPropertyValue("--brand") || this.color;
+        this.ctx.font = "20% Roboto"
         this.ctx.textAlign = "center"
         this.ctx.fillStyle = this.color
         this.ctx.textBaseline = "middle"
