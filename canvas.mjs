@@ -20,6 +20,7 @@ export default class BaseCanvas extends HTMLCanvasElement {
         this.onclick = undefined
         if(this.wakelock) {
             this.WakeLockSentinel = await navigator.wakeLock.request("screen")
+            this.log('wakelock enabled')
         }
         if(this.fullscreen) {
             await this.requestFullscreen()
@@ -31,6 +32,7 @@ export default class BaseCanvas extends HTMLCanvasElement {
         if(this.wakelock && this.WakeLockSentinel && !this.WakeLockSentinel.released) {
             await this.WakeLockSentinel.release()
             this.WakeLockSentinel = null
+            this.log('wakelock released')
         }
         if(this == document.fullscreenElement) {
             await document.exitFullscreen()

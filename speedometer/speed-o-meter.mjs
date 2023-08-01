@@ -4,12 +4,12 @@ export default class SpeedOMeter extends BaseCanvas {
 
     speed = 0
     max = 300
-    trackerId
+    trackerId = undefined
     color = "teal"
 
     constructor() {
         super()
-        this.fullscreen = true
+        this.fullscreen = false
         this.wakelock = true
     }
 
