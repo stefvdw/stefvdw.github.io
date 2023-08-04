@@ -55,6 +55,14 @@ export default class Fireworks extends BaseCanvas {
         }
     }
 
+    drawText(text) {
+        this.ctx.fillStyle = this.getRandomColor()
+        this.ctx.font = `${this.height / 10}px Roboto`
+        this.ctx.textAlign = "center"
+        this.ctx.textBaseline = "middle"
+        this.ctx.fillText(text, this.width / 2, this.height / 2)
+    }
+
     addPixel(x,y) {
         if(!x && !y) {
             x = Math.random() * this.width
