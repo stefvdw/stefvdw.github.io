@@ -47,7 +47,7 @@ export default class Fireworks extends BaseCanvas {
         this.pixels.forEach(this.clearPixels.bind(this))
         this.pixels.forEach(this.movePixels.bind(this))
         this.ctx.fillStyle = "rgba(0,0,0,0.1)"
-        this.clear()
+        this.ctx.fillRect(0, 0, this.width, this.height)
         
         for (const pixel of this.pixels.flat()) {
             this.ctx.fillStyle = pixel.color
