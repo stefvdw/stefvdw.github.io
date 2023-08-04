@@ -44,8 +44,8 @@ export default class Fireworks extends BaseCanvas {
     }
 
     draw() {
-        this.pixels.forEach(this.clearPixels)
-        this.pixels.forEach(this.movePixels)
+        this.pixels.forEach(this.clearPixels.bind(this))
+        this.pixels.forEach(this.movePixels.bind(this))
         this.ctx.fillStyle = "rgba(0,0,0,0.1)"
         this.clear()
         
@@ -82,7 +82,7 @@ export default class Fireworks extends BaseCanvas {
     }
 
     clearPixels(fireworkevent, index) {
-        if(fireworkevent.every(this.isPixelOut)) {
+        if(fireworkevent.every(this.isPixelOut.bind(this))) {
             this.pixels.splice(index,1)
         }
     }
