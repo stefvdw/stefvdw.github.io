@@ -88,6 +88,28 @@ export class IDB {
         })
     }
     
+    getAllWithKeys() {
+        return new Promise((resolve, reject) => {
+            this.transaction().then(transaction => {
+                let request = transaction.openCursor()
+                let data = new Array()
+                request.onsuccess = (event) => {
+                    let cursor = event.target.result
+                    if (cursor) {
+                        let key = cursor.primaryKey
+                        let value = cursor.value
+                        data.push(Object.assign(value, {key}))
+                        cursor.continue()
+                    }
+                    else {
+                        resolve(data)
+                    }
+                }
+                transaction.onerror = reject
+            }).catch(reject)
+        })
+    }
+
     set(data, transaction) {
         return new Promise(async (resolve, reject) => {
             transaction = transaction || await this.transaction('readwrite')
@@ -100,7 +122,7 @@ export class IDB {
     delete(key) {
         return new Promise((resolve, reject) => {
             this.transaction('readwrite').then(transaction => {
-                const request = transaction.delete(key.toLocaleLowerCase())
+                const request = transaction.delete(key)
                 request.onsuccess = () => resolve(request.result)
                 transaction.onerror = reject
             }).catch(reject)
@@ -110,7 +132,7 @@ export class IDB {
     has(key) {
         return new Promise((resolve, reject) => {
             this.transaction().then(transaction => {
-                const request = transaction.getKey(key.toLocaleLowerCase())
+                const request = transaction.getKey(key)
                 request.onsuccess = () => resolve(request.result)
                 transaction.onerror = reject
             }).catch(reject)

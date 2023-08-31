@@ -22,7 +22,7 @@ export default class File extends EventTarget {
     }
 
     get recents() {
-        return IDB.getAll()
+        return IDB.getAllWithKeys()
     }
 
     async onDrop(event) {
@@ -56,6 +56,8 @@ export default class File extends EventTarget {
 
     async loadFile() {
         if(!this.fileHandle) throw new Error('No file handle')
+        console.log('checking permissions')
+        if(!await this.verifyPermission()) throw new Error('No file read write permission')
         console.log(`Opening ${this.fileHandle.name}`)
         const file = await this.fileHandle.getFile()
         this.content = await file.text()
@@ -101,5 +103,9 @@ export default class File extends EventTarget {
         }
         // The user didn't grant permission, so return false.
         return false
+      }
+
+      async clearRecent(key) {
+        await IDB.delete(key)
       }
 }

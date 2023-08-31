@@ -1,11 +1,15 @@
 import File from './file.mjs'
+import filters from './filters.json' assert { type: 'json' }
 
 class Matrix extends File {
     constructor() {
         super({
+            id: 'matrix',
             multiple: false,
             types: [{description: 'Matrix file', accept: {'text/xml': ['.matrix']}}]
         })
+
+        
     }
 
     get content() {
@@ -39,6 +43,23 @@ class Matrix extends File {
     set type(value) {
         value = value == "96" ? "96" : "384"
         this.xml?.querySelector('CoefficientFactors')?.setAttribute('CarrierSize', value)
+        return value
+    }
+
+    get version() { return this.xml?.querySelector('*|Channel')?.getAttribute('InstrumentVersion') || 'New' }
+
+    set version(value) {
+        const isNew = value == "New"
+        value = isNew ? "New" : "Old"
+        if(!this.xml) return
+        const channels = Array.from(this.xml.querySelectorAll('*|Channel'))
+        if(!channels) return
+        for (const channel of channels) {
+            const name = channel.getAttribute('x:Name')
+            channel.setAttribute('InstrumentVersion', value)
+            channel.setAttribute('DetectorId', 'Wavelength' + filters[name][value.toLowerCase()].detector)
+            channel.setAttribute('EmitterId', 'Wavelength' + filters[name][value.toLowerCase()].emitter)
+        }
         return value
     }
 

@@ -12,7 +12,6 @@
         import matrix from './matrix.mjs'
         
         const form = document.forms['matrixform']
-        const notification = document.getElementById('notification')
         
         matrix.addEventListener('load', render)
         
@@ -48,6 +47,8 @@
             
             form.elements['name'].value = matrix.name ? matrix.name : null
             form.elements['type'].value = matrix.type
+            form.elements['version'].value = matrix.version
+            console.log(matrix.version)
             loadRecents()
         }
         
@@ -61,16 +62,26 @@
             }
             matrix.name = form.elements['name'].value
             matrix.type = form.elements['type'].value
+            matrix.version = form.elements['version'].value
         }
         
         async function loadRecents() {
             const recentList = document.querySelector('#recentList')
-            recentList.innerHTML = ''
-            for (const recent of await matrix.recents) {
+            recentList.innerHTML = '<summary>Recent files</summary>'
+            for (const recent of  await matrix.recents) {
                 const recentButton = document.createElement('button')
                 recentButton.type = "button"
                 recentButton.classList.add('recent')
-                recentButton.onclick = () => matrix.open(recent.handle)
+                recentButton.onclick = async () => {
+                    try {
+                        await matrix.open(recent.handle)
+                    } catch (error) {
+                        if(confirm('Could not open file. Would you like to remove it from the recents list?')) {
+                            matrix.clearRecent(recent.key)
+                            recentButton.remove()
+                        }
+                    }
+                }
                 recentButton.innerText = recent.name
                 recentList.append(recentButton)
             }
@@ -78,8 +89,7 @@
         
         async function save(asNewFile = false) {
             try {
-                notification.innerText = 'Saving file'
-                notification.showModal()
+                document.body.classList.add('loading', 'saving')
                 saveCoefficients()
                 if(asNewFile) {
                     matrix.fileHandle = null
@@ -89,21 +99,20 @@
                 console.error(error)
                 alert('File not saved')
             } finally {
-                notification.close()
+                document.body.classList.remove('loading', 'saving')
             }
         }
         
         async function open() {
             try {
-                notification.innerText = 'Opening file'
-                notification.showModal()
+                document.body.classList.add('loading')
                 await matrix.open()
                 render()
             } catch (error) {
                 console.error(error)
                 alert('Error opening the file')
             } finally {
-                notification.close()
+                document.body.classList.remove('loading')
             }
         }
         
@@ -130,18 +139,34 @@
             background: none;
             border: none;
         }
-        
-        dialog {
-            margin: auto;
-            background-color: var(--background-color);
-            border: 3px solid var(--theme-color);
+
+        .loading::before {
+            content: "Loading";
+            position: absolute;
+            align-self: center;
+            display: flex;
+            justify-self: center;
+            font-size: 2.5rem;
+            background-color: white;
+            z-index: 2;
+            padding: 1rem 3rem 5rem 3rem;
             border-radius: 1rem;
-            padding: 1rem 2rem;
-        }
+            border: 3px solid var(--background-color-dark);
         
-        dialog.busy::before {
-            content: " ";
-            display: block;
+        }
+
+        .saving::before {
+            content: "Saving file";
+        }
+
+        .loading::after {
+            position: absolute;
+            align-self: center;
+            display: flex;
+            justify-self: center;
+            z-index: 2;
+            translate: 0 50%;
+            content: "";
             width: 2rem;
             height: 2rem;
             margin: 1rem auto;
@@ -149,10 +174,6 @@
             border: 6px solid var(--theme-color);
             border-color: var(--theme-color) transparent var(--theme-color) transparent;
             animation: spinner 1.2s linear infinite;
-        }
-
-        dialog.busy button {
-            display: none;
         }
 
         @keyframes spinner {
@@ -167,7 +188,8 @@
         
         body {
             background-color: var(--background-color-dark);
-            display: flex;
+            display: grid;
+            grid-template-columns: 250px 3fr;
         }
         
         form {
@@ -201,6 +223,7 @@
             align-items: center;
             flex: 100% 0 1;
             border-bottom: 1px solid var(--accent-color);
+            text-wrap: nowrap;
         }
         
         input, select {
@@ -208,6 +231,11 @@
             padding: 0.5rem;
             flex: 100% 0 1;
             outline: none;
+            margin-left: 1rem;
+        }
+
+        input:invalid {
+            color: var(--accent-color)
         }
         
         .rotate {
@@ -225,7 +253,7 @@
             max-height: 100vh;
         }
         
-        nav button, nav a {
+        nav button, nav a, nav details, nav summary {
             padding: 1rem 2rem;
             color: #FFFFFF;
             border-left: 5px solid transparent;
@@ -233,7 +261,7 @@
             text-align: center;
             font-size: 1rem;
         }
-        nav button:hover, nav a:hover {
+        nav button:hover, nav a:hover, nav details:hover, nav summary:hover {
             border-left: 5px solid var(--accent-color);
         }
         
@@ -245,18 +273,17 @@
             display: none;
         }
         
-        #recentList:not(:empty)::before {
+        summary {
             content: 'Recent files';
             font-size: 0.7rem;
             padding: 0.5rem;
             text-align: center;
             margin-top: auto;
-            border-bottom: 1px solid var(--accent-color);
+            border-top: 1px solid var(--accent-color);
             color: var(--text-color-header)
         }
         
         main {
-            border-radius: 0 1rem 1rem 0;
             margin-left: -1rem;
             padding: 1rem;
             padding-left: 2rem;
@@ -274,11 +301,11 @@
         <button id="open" type="button">Open</button>
         <button id="save" type="button">Save</button>
         <button id="saveAs" type="button">Save as</button>
-        <section id="recentList"></section>
-    </nav>
-    
-    <dialog id="notification" class="busy"></dialog>
-    
+        <details id="recentList">
+            <summary>Recent files</summary>
+        </details>
+        <!-- <section id="recentList"></section> -->
+    </nav>    
     <main>        
         <form id="matrixform">
             <fieldset id="options">
@@ -286,9 +313,15 @@
                 <label>Name:<input name="name" placeholder="Matrix name" title="This is the name of the matrix that is shown to the user in the application"></label>
                 <!-- <br> -->
                 <label>Type:
-                    <select name="type">
+                    <select name="type" title="Choose the type of instrument this matrix is created for">
                         <option value="96" selected>96-Well Plate</option>
                         <option value="384">384-well Plate</option>
+                    </select>
+                </label>
+                <label>LED configuration:
+                    <select name="version" title="Choose the LED configuration of instrument this matrix is created for">
+                        <option value="New" selected>New</option>
+                        <option value="Old">Old</option>
                     </select>
                 </label>
             </fieldset>

@@ -1,0 +1,52 @@
+{
+    "blue": {
+        "old": {
+            "emitter": 524,
+            "detector": 465
+        }, 
+        "new": {
+            "emitter": 455,
+            "detector": 515
+        }
+    },
+    "green": {
+        "old": {
+            "emitter": 510,
+            "detector": 656
+        }, 
+        "new": {
+            "emitter": 520,
+            "detector": 560
+        }
+    },
+    "orange": {
+        "old": {
+            "emitter": 560,
+            "detector": 610
+        }, 
+        "new": {
+            "emitter": 580,
+            "detector": 620
+        }
+    },
+    "red": {
+        "old": {
+            "emitter": 625,
+            "detector": 680
+        }, 
+        "new": {
+            "emitter": 633,
+            "detector": 680
+        }
+    },
+    "nir1": {
+        "old": {
+            "emitter": 625,
+            "detector": 710
+        }, 
+        "new": {
+            "emitter": 660,
+            "detector": 710
+        }
+    }
+}
