@@ -68,7 +68,9 @@
         async function loadRecents() {
             const recentList = document.querySelector('#recentList')
             recentList.innerHTML = '<summary>Recent files</summary>'
-            for (const recent of  await matrix.recents) {
+            const recents = await matrix.recents
+            recents.reverse()
+            for (const recent of recents) {
                 const recentButton = document.createElement('button')
                 recentButton.type = "button"
                 recentButton.title = `Last edited on: \n${recent.date.toLocaleString('en-GB')}`
