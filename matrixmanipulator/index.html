@@ -71,7 +71,7 @@
             for (const recent of  await matrix.recents) {
                 const recentButton = document.createElement('button')
                 recentButton.type = "button"
-                recentButton.classList.add('recent')
+                recentButton.title = `Last edited on: \n${recent.date.toLocaleString('en-GB')}`
                 recentButton.onclick = async () => {
                     try {
                         await matrix.open(recent.handle)
@@ -253,7 +253,7 @@
             max-height: 100vh;
         }
         
-        nav button, nav a, nav details, nav summary {
+        nav button, nav a, nav summary {
             padding: 1rem 2rem;
             color: #FFFFFF;
             border-left: 5px solid transparent;
@@ -261,12 +261,14 @@
             text-align: center;
             font-size: 1rem;
         }
-        nav button:hover, nav a:hover, nav details:hover, nav summary:hover {
+        nav button:hover, nav a:hover {
             border-left: 5px solid var(--accent-color);
         }
         
         #recentList {
-            display: contents;
+            max-height: 50vh;
+            overflow-y: auto;
+            margin-top: auto;
         }
         
         #recentList:empty {
