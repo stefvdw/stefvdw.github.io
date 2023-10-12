@@ -1,8 +1,8 @@
 {
     "blue": {
         "old": {
-            "emitter": 524,
-            "detector": 465
+            "emitter": 465,
+            "detector": 524
         }, 
         "new": {
             "emitter": 455,
@@ -12,7 +12,7 @@
     "green": {
         "old": {
             "emitter": 510,
-            "detector": 656
+            "detector": 565
         }, 
         "new": {
             "emitter": 520,
