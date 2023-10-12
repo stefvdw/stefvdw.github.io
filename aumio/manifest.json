@@ -1,0 +1,21 @@
+{
+    "name": "Aumio",
+    "lang": "en-us",
+    "short_name": "Aumio",
+    "description": "Play aumio links in the browser",
+    "id": "aumio",
+    "start_url": "./",
+    "scope": "./",
+    "display": "minimal-ui",
+    "theme_color": "purple",
+    "background_color": "purple",
+    "orientation": "any",
+    "share_target": {
+        "action": "./",
+        "method": "GET",
+        "params": {
+            "hash": "j"
+        }
+    }
+      
+}

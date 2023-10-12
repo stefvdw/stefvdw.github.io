@@ -1,0 +1,114 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+    <title>Aumio share target</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/Qiagen.svg" type="image/svg+xml">
+    <meta name="theme-color" content="#1B3067">
+    
+    <script type="module">
+
+        const urlField = document.getElementById('url')
+        const audio = document.getElementById('audio')
+        const title = document.getElementById('title')
+        const description = document.getElementById('description')
+
+        urlField.addEventListener('input', handleURL)
+
+        function handleURL(event) {
+            try {
+                const url = new URL(urlField.value)
+                if(url.origin != 'https://play.aumio.com') throw new Error('Domain does not match')
+                const hash = url.searchParams.get("j")
+                if(!hash || hash.length < 1) throw new Error('No hash found')
+
+                const data = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(hash), c => c.charCodeAt(0))))
+    
+                audio.hidden = false
+                audio.src = data.urls[0]
+
+                title.innerText = data.title
+                description.innerText = data.description
+
+                console.log(url.origin, hash, data)
+            } catch (error) {
+                console.log(error)
+                audio.src = ""
+                audio.removeAttribute('src')
+                audio.hidden = true
+
+                title.innerText = 'No match'
+                description.innerText = 'The link you provided dit not return anything'
+                
+            } finally {
+            }
+            
+        }
+
+        // if ('serviceWorker' in navigator) {
+        //     navigator.serviceWorker.register('./sw.mjs');
+        // }
+
+        handleURL()
+                
+    </script>
+    <style>
+        :root {
+            color-scheme: light dark;
+            --theme-color: purple;
+            accent-color: var(--theme-color);
+        }
+        
+        * {
+            text-decoration: None;
+            margin: 0;
+            font-family: Roboto;
+            background: none;
+
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3rem;
+            max-width: 80ch;
+            margin: 3rem auto;  
+            border-radius: 0.5rem;        
+        }
+
+        input {
+            font-size: 1.3rem;
+            padding: 1rem;
+            border: 1px solid gray;
+            width: 100%;
+            border-radius: 0.5rem;
+        }
+
+        input:invalid + section {
+            display: none;
+        }
+
+        input:invalid + section:after {
+            content: 'input does not match a valid Aumio URL';
+        }
+
+        input:valid + section {
+            display: contents;
+        }
+       
+    </style>
+</head>
+<body>
+    <input id="url" type="url" placeholder="https://play.aumio.com/share/?j=eyJpZCI6IjM4My" required validate pattern="https:\/\/play\.aumio\.com\/share\/\?j=.{5,}" value="https://play.aumio.com/share/?j=eyJpZCI6IjM4MyIsImtleSI6InNyMTQ0IiwidmFyaWFudCI6InNlc3Npb24iLCJleHBpcmVEYXRlIjoiMjAyMy0xMC0xOFQxMjoyODozNy44NzBaIiwidGl0bGUiOiJCZXR0eSAmIGRlciBTdGVybmVuLVN0YXVic2F1Z2VyIiwiZGVzY3JpcHRpb24iOiJXaWUgQmV0dHkgdm9uIGVpbmVyIEZhaHJ0IGR1cmNoIE1pbmR1bmEgbcO8ZGUgd2lyZC4gIiwidXJscyI6WyJodHRwczovL2F1bWlvLWFzc2V0cy5zMy5ldS1jZW50cmFsLTEuYW1hem9uYXdzLmNvbS9hc3NldHMvYXVkaW8vZGUlMkIxNjBrYnBzJTJCc3IlMkJzcjE0NCUyQnYyLm1wMyJdfQ">
+
+    <section>
+        <h1 id="title"></h1>
+        <p id="description"></p>
+        <audio id="audio" controls></audio>
+    </section>
+    
+    
+</body>
+</html>
