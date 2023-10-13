@@ -55,7 +55,7 @@
         const sharedText = searchParams.get("text")
         const sharedLink = searchParams.get("link")
 
-        alert(`Title: ${sharedTitle}, \n Text: ${sharedText} \n Link: ${sharedLink}`)
+        alert(`${window.location.toString()} \n Title: ${sharedTitle}, \n Text: ${sharedText} \n Link: ${sharedLink}`)
         urlField.value = window.location.toString()
 
         handleURL()
