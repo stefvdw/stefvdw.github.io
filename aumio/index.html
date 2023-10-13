@@ -50,7 +50,7 @@
             navigator.serviceWorker.register('./sw.mjs');
         }
 
-        const searchParams = new URL(window.location).searchParams
+        const searchParams = new URL(window.location.toString()).searchParams
         const sharedTitle = searchParams.get("title")
         const sharedText = searchParams.get("text")
         const sharedLink = searchParams.get("link")
