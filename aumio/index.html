@@ -50,6 +50,9 @@
             navigator.serviceWorker.register('./sw.mjs');
         }
 
+        const sharedLink = new URL(window.location).searchParams.get("link")
+        urlField.value = sharedLink
+
         handleURL()
                 
     </script>
@@ -107,7 +110,7 @@
     </style>
 </head>
 <body>
-    <input id="url" type="url" placeholder="https://play.aumio.com/share/?j=eyJpZCI6IjM4My" required validate pattern="https:\/\/play\.aumio\.com\/share\/\?j=.{5,}" value="https://play.aumio.com/share/?j=eyJpZCI6IjM4MyIsImtleSI6InNyMTQ0IiwidmFyaWFudCI6InNlc3Npb24iLCJleHBpcmVEYXRlIjoiMjAyMy0xMC0xOFQxMjoyODozNy44NzBaIiwidGl0bGUiOiJCZXR0eSAmIGRlciBTdGVybmVuLVN0YXVic2F1Z2VyIiwiZGVzY3JpcHRpb24iOiJXaWUgQmV0dHkgdm9uIGVpbmVyIEZhaHJ0IGR1cmNoIE1pbmR1bmEgbcO8ZGUgd2lyZC4gIiwidXJscyI6WyJodHRwczovL2F1bWlvLWFzc2V0cy5zMy5ldS1jZW50cmFsLTEuYW1hem9uYXdzLmNvbS9hc3NldHMvYXVkaW8vZGUlMkIxNjBrYnBzJTJCc3IlMkJzcjE0NCUyQnYyLm1wMyJdfQ">
+    <input id="url" type="url" placeholder="https://play.aumio.com/share/?j=eyJpZCI6IjM4My" required validate pattern="https:\/\/play\.aumio\.com\/share\/\?j=.{5,}">
 
     <section>
         <h1 id="title"></h1>

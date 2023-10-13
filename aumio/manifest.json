@@ -24,7 +24,7 @@
         "action": "./",
         "method": "GET",
         "params": {
-            "hash": "j"
+            "url": "link"
         }
     }
       
