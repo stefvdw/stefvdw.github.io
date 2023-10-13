@@ -4,8 +4,8 @@
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
     <title>Aumio share target</title>
     <link rel="manifest" href="/manifest.json">
-    <link rel="icon" href="/Qiagen.svg" type="image/svg+xml">
-    <meta name="theme-color" content="#1B3067">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <meta name="theme-color" content="magenta">
     
     <script type="module">
 
@@ -46,9 +46,9 @@
             
         }
 
-        // if ('serviceWorker' in navigator) {
-        //     navigator.serviceWorker.register('./sw.mjs');
-        // }
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.mjs');
+        }
 
         handleURL()
                 
@@ -56,7 +56,7 @@
     <style>
         :root {
             color-scheme: light dark;
-            --theme-color: purple;
+            --theme-color: magenta;
             accent-color: var(--theme-color);
         }
         
@@ -68,6 +68,10 @@
 
         }
 
+        html {
+            background-color: purple;
+        }
+
         body {
             display: flex;
             flex-direction: column;
@@ -75,7 +79,9 @@
             gap: 3rem;
             max-width: 80ch;
             margin: 3rem auto;  
-            border-radius: 0.5rem;        
+            border-radius: 0.5rem;
+            background-color: canvas;
+            padding: 3rem;       
         }
 
         input {

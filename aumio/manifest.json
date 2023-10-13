@@ -10,6 +10,16 @@
     "theme_color": "purple",
     "background_color": "purple",
     "orientation": "any",
+    "icons": [
+        {
+            "src": "icon.png",
+            "sizes": "256x256"
+        }, {
+            "src": "icon.svg",
+            "purpose": "maskable any",
+            "sizes": "any"
+        }
+    ],
     "share_target": {
         "action": "./",
         "method": "GET",
