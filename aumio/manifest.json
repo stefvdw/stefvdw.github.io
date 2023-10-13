@@ -6,7 +6,7 @@
     "id": "aumio",
     "start_url": "./",
     "scope": "./",
-    "display": "minimal-ui",
+    "display": "standalone",
     "theme_color": "purple",
     "background_color": "purple",
     "orientation": "any",
