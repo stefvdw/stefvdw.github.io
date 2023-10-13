@@ -50,8 +50,13 @@
             navigator.serviceWorker.register('./sw.mjs');
         }
 
-        const sharedLink = new URL(window.location).searchParams.get("link")
-        urlField.value = sharedLink
+        const searchParams = new URL(window.location).searchParams
+        const sharedTitle = searchParams.get("title")
+        const sharedText = searchParams.get("text")
+        const sharedLink = searchParams.get("link")
+
+        alert(`Title: ${sharedTitle}, \n Text: ${sharedText} \n Link: ${sharedLink}`)
+        urlField.value = sharedText
 
         handleURL()
                 
