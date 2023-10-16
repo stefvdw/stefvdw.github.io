@@ -51,12 +51,10 @@
         }
 
         const searchParams = new URL(window.location.toString()).searchParams
-        // const sharedTitle = searchParams.get("title")
         const sharedText = searchParams.get("text")
-        // const sharedLink = searchParams.get("url")
-
-        // alert(`${window.location.toString()} \n Title: ${sharedTitle}, \n Text: ${sharedText} \n Link: ${sharedLink}`)
-        urlField.value = sharedText
+        const aumioURL = sharedText.split('\n')[1]
+        // const j = new URL(aumioURL).searchParams.get('j')
+        urlField.value = aumioURL
 
         handleURL()
                 
