@@ -53,13 +53,25 @@
         const searchParams = new URL(window.location.toString()).searchParams
         const sharedTitle = searchParams.get("title")
         const sharedText = searchParams.get("text")
-        const sharedLink = searchParams.get("link")
+        const sharedLink = searchParams.get("url")
 
         alert(`${window.location.toString()} \n Title: ${sharedTitle}, \n Text: ${sharedText} \n Link: ${sharedLink}`)
         urlField.value = window.location.toString()
 
         handleURL()
                 
+    </script>
+
+    <script defer> 
+    {
+        const searchParams = new URL(window.location.toString()).searchParams
+        const sharedTitle = searchParams.get("title")
+        const sharedText = searchParams.get("text")
+        const sharedLink = searchParams.get("url")
+
+        alert(`${window.location.toString()} \n Title: ${sharedTitle}, \n Text: ${sharedText} \n Link: ${sharedLink}`)
+    }
+    
     </script>
     <style>
         :root {
