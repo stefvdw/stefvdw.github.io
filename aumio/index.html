@@ -146,24 +146,36 @@
 
         input:valid + section {
             display: contents;
-        }
-
-        dl {
-            display: grid;
-            grid-auto-flow: column;
-            /* doesn't assume 3 terms but N */
-            grid-template-columns: auto 1fr;
-            gap: 1rem;
-            grid-template-rows: repeat(50, min-content); /* doesn't assume 3 defs but M<50 */
-        }
+        }s
 
         dt {
             grid-column: 1;
+            
         }
 
         dd {
             grid-column: 2;
             overflow-wrap: anywhere;
+            border-left: 1px solid var(--theme-color);
+            padding-left: 1rem;
+        }
+
+        #log {
+            display: none;
+        }
+
+        #log {
+            display: grid;
+            display: grid;
+            grid-auto-flow: column;
+            grid-template-columns: auto 1fr;
+            gap: 1rem;
+            grid-template-rows: repeat(50, min-content);
+            font-size: 0.7rem;
+        }
+
+        details{
+            width: 100%;
         }
        
     </style>
@@ -177,8 +189,10 @@
         <audio id="audio" controls></audio>
     </section>
 
-    
-    <dl id="log"></dl>
+    <details>
+        <summary>See log</summary>
+        <dl id="log"></dl>
+    </details>
     
     
 </body>
