@@ -19,6 +19,7 @@
 
         function handleURL(event) {
             try {
+                urlField.checkValidity()
                 const url = new URL(urlField.value)
                 if(url.origin != 'https://play.aumio.com') throw new Error('Domain does not match')
                 const hash = url.searchParams.get("j")
@@ -168,7 +169,7 @@
     </style>
 </head>
 <body>
-    <input id="url" type="url" placeholder="https://play.aumio.com/share/?j=eyJpZCI6IjM4My" required validate pattern="https:\/\/play\.aumio\.com\/share\/\?j=.{5,}">
+    <input id="url" type="url" placeholder="https://play.aumio.com/share/?j=eyJpZCI6IjM4My" required validate pattern="https:\/\/play\.aumio\.com\/share\?j=.{5,}">
 
     <section>
         <h1 id="title"></h1>
