@@ -24,11 +24,11 @@
                 const hash = url.searchParams.get("j")
                 if(!hash || hash.length < 1) throw new Error('No hash found')
 
-                log(hash)
+                log(`Hash: ${hash}`)
 
                 const data = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(hash), c => c.charCodeAt(0))))
 
-                log(data)
+                log(`Data: ${data}`)
     
                 audio.hidden = false
                 audio.src = data.urls[0]
@@ -54,22 +54,43 @@
             
         }
 
+        let lastLog = 0
         function log(text) {
-            logField.innerText += `${text}\n`
+            console.log(text)
+            const now = new Date()
+            if(now - lastLog > 1000) {
+                lastLog = now
+                const timestamp = document.createElement('dt')
+                timestamp.innerText = lastLog.toLocaleTimeString()
+                logField.append(timestamp)
+            }
+            const logline = document.createElement('dd')
+            logline.innerText = text
+            logField.append(logline)
         }
+
+        log('log started')
 
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('./sw.mjs');
         }
 
-        const searchParams = new URL(window.location.toString()).searchParams
-        log(searchParams)
-        const sharedText = searchParams.get("text")
-        log(sharedText)
-        const aumioURL = sharedText.split('\n')[1]
-        log(aumioURL)
-        // const j = new URL(aumioURL).searchParams.get('j')
-        urlField.value = aumioURL
+        try {
+            const searchParams = new URL(window.location.toString()).searchParams
+
+            for (let [key, val] of searchParams.entries()) {
+                log(`keyval: ${key}: ${val}`)
+            }
+            log(`search parameters: ${searchParams}`)
+            const sharedText = searchParams.get("text")
+            log(`search text: ${sharedText}`)
+            const aumioURL = sharedText.split('\n')[1]
+            log(`aumio url: ${aumioURL}`)
+            // const j = new URL(aumioURL).searchParams.get('j')
+            urlField.value = aumioURL
+        } catch (error) {
+            log(`Error: ${error}`)
+        }
 
         handleURL()
                 
@@ -125,6 +146,24 @@
         input:valid + section {
             display: contents;
         }
+
+        dl {
+            display: grid;
+            grid-auto-flow: column;
+            /* doesn't assume 3 terms but N */
+            grid-template-columns: auto 1fr;
+            gap: 1rem;
+            grid-template-rows: repeat(50, min-content); /* doesn't assume 3 defs but M<50 */
+        }
+
+        dt {
+            grid-column: 1;
+        }
+
+        dd {
+            grid-column: 2;
+            overflow-wrap: anywhere;
+        }
        
     </style>
 </head>
@@ -137,7 +176,8 @@
         <audio id="audio" controls></audio>
     </section>
 
-    <textarea id="log"></textarea>
+    
+    <dl id="log"></dl>
     
     
 </body>
