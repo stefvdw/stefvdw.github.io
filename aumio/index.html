@@ -22,8 +22,14 @@
                 urlField.checkValidity()
                 const url = new URL(urlField.value)
                 if(url.origin != 'https://play.aumio.com') throw new Error('Domain does not match')
-                const hash = url.searchParams.get("j")
+                let hash = url.searchParams.get("j")
                 if(!hash || hash.length < 1) throw new Error('No hash found')
+
+                // deal with URL save base64
+                hash = hash.replace(/-/g, '+').replace(/_/g, '/')
+                while (hash.length % 4 !== 0) {
+                    hash += '=';
+                }
 
                 log(`Hash: ${hash}`)
 
