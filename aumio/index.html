@@ -142,15 +142,7 @@
             border-radius: 0.5rem;
         }
 
-        input:invalid + section {
-            display: none;
-        }
-
-        input:invalid + section:after {
-            content: 'input does not match a valid Aumio URL';
-        }
-
-        input:valid + section {
+        section {
             display: contents;
         }
 
@@ -187,7 +179,7 @@
     </style>
 </head>
 <body>
-    <input id="url" type="url" placeholder="https://play.aumio.com/share/?j=eyJpZCI6IjM4My" required validate pattern="https:\/\/play\.aumio\.com\/share\?j=.{5,}">
+    <input id="url" type="url" placeholder="https://play.aumio.com/share/?j=eyJpZCI6IjM4My" required validate>
 
     <section>
         <h1 id="title"></h1>
