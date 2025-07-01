@@ -1,5 +1,5 @@
 import File from './file.mjs'
-import filters from './filters.json' assert { type: 'json' }
+import filters from './filters.json' with { type: "json" }
 
 class Matrix extends File {
     constructor() {
