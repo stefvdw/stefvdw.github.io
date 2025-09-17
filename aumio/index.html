@@ -8,15 +8,20 @@
     <meta name="theme-color" content="magenta">
     
     <script type="module">
-
+        
         const urlField = document.getElementById('url')
         const audio = document.getElementById('audio')
         const title = document.getElementById('title')
         const description = document.getElementById('description')
         const logField = document.getElementById('log')
-
+        const homeassistantbutton = document.getElementById('homeassistant')
+        const WebhookURL = "http://homeassistant.local:8123/api/webhook/play_aumio_audio"
+        
         urlField.addEventListener('input', handleURL)
-
+        homeassistantbutton.addEventListener('click', playInHomeAssistant)
+        
+        let data = null
+        
         function handleURL(event) {
             try {
                 urlField.checkValidity()
@@ -24,25 +29,31 @@
                 if(url.origin != 'https://kids.aumio.com') throw new Error('Domain does not match')
                 let hash = url.searchParams.get("j")
                 if(!hash || hash.length < 1) throw new Error('No hash found')
-
+                
                 // deal with URL save base64
                 hash = hash.replace(/-/g, '+').replace(/_/g, '/')
                 while (hash.length % 4 !== 0) {
                     hash += '=';
                 }
-
+                
                 log(`Hash: ${hash}`)
-
-                const data = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(hash), c => c.charCodeAt(0))))
-
+                
+                data = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(hash), c => c.charCodeAt(0))))
+                
                 log(`Data: ${data}`)
-    
+                
                 audio.hidden = false
                 audio.src = data.urls[0]
-
+                
                 title.innerText = data.title
                 description.innerText = data.description
-
+                
+                // Example usage:
+                isHAReachable().then(reachable => {
+                    homeassistantbutton.hidden = !reachable
+                })
+                
+                
                 console.log(url.origin, hash, data)
                 log(data.urls[0])
                 log(data.title)
@@ -52,7 +63,8 @@
                 audio.src = ""
                 audio.removeAttribute('src')
                 audio.hidden = true
-
+                homeassistantbutton.hidden = true
+                
                 title.innerText = 'No match'
                 description.innerText = 'The link you provided dit not return anything'
                 
@@ -60,7 +72,36 @@
             }
             
         }
-
+        
+        async function isHAReachable() {
+            try {
+                const response = await fetch(WebhookURL, {
+                    method: "HEAD",
+                })
+                return response.ok
+            } catch (err) {
+                return false
+            }
+        }
+        
+        function playInHomeAssistant() {
+            if(!data.urls[0]) throw Error('no url')
+            playAumioAudio(data.urls[0], data.title || 'No title')
+        }
+        
+        async function playAumioAudio(mp3Url, title) {
+            try {
+                await fetch(WebhookURL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ url: mp3Url, title: title })
+                });
+                console.log("Audio sent to Home Assistant!")
+            } catch (err) {
+                console.error("Error sending audio:", err)
+            }
+        }
+        
         let lastLog = 0
         function log(text) {
             console.log(text)
@@ -75,16 +116,16 @@
             logline.innerText = text
             logField.append(logline)
         }
-
+        
         log('log started')
-
+        
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('./sw.mjs');
         }
-
+        
         try {
             const searchParams = new URL(window.location.toString()).searchParams
-
+            
             for (let [key, val] of searchParams.entries()) {
                 log(`keyval: ${key}: ${val}`)
             }
@@ -98,11 +139,11 @@
         } catch (error) {
             log(`Error: ${error}`)
         }
-
+        
         handleURL()
-                
+        
     </script>
-
+    
     <style>
         :root {
             color-scheme: light dark;
@@ -115,13 +156,13 @@
             margin: 0;
             font-family: Roboto;
             background: none;
-
+            
         }
-
+        
         html {
             background-color: purple;
         }
-
+        
         body {
             display: flex;
             flex-direction: column;
@@ -133,35 +174,35 @@
             background-color: canvas;
             padding: 3rem;       
         }
-
-        input {
+        
+        input, button {
             font-size: 1.3rem;
             padding: 1rem;
             border: 1px solid gray;
             width: 100%;
             border-radius: 0.5rem;
         }
-
+        
         section {
             display: contents;
         }
-
+        
         dt {
             grid-column: 1;
             
         }
-
+        
         dd {
             grid-column: 2;
             overflow-wrap: anywhere;
             border-left: 1px solid var(--theme-color);
             padding-left: 1rem;
         }
-
+        
         #log {
             display: none;
         }
-
+        
         #log {
             display: grid;
             display: grid;
@@ -171,22 +212,23 @@
             grid-template-rows: repeat(50, min-content);
             font-size: 0.7rem;
         }
-
+        
         details{
             width: 100%;
         }
-       
+        
     </style>
 </head>
 <body>
     <input id="url" type="url" placeholder="https://kids.aumio.com/share/?j=eyJpZCI6IjM4My" required validate>
-
+    
     <section>
         <h1 id="title"></h1>
         <p id="description"></p>
         <audio id="audio" controls></audio>
+        <button type="button" id="homeassistant">Play in HA</button>
     </section>
-
+    
     <details>
         <summary>See log</summary>
         <dl id="log"></dl>
