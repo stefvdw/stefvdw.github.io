@@ -15,10 +15,11 @@
         const description = document.getElementById('description')
         const logField = document.getElementById('log')
         const homeassistantbutton = document.getElementById('homeassistant')
-        const WebhookURL = "https://homeassistant.local:8123/api/webhook/play_aumio_audio"
+        
         
         urlField.addEventListener('input', handleURL)
         homeassistantbutton.addEventListener('click', playInHomeAssistant)
+        homeassistantbutton.addEventListener('contextmenu', clearLocalStorage)
         
         let data = null
         
@@ -72,12 +73,32 @@
             }
             
         }
+
+        function clearLocalStorage(e) {
+            e.preventDefault()
+            if(!confirm('clear public Home Assistant URL from local storage')) return
+            localStorage.removeItem('haPublicUrl')
+        }
+        
+        function getHaUrl() {
+            let haUrl = localStorage.getItem("haPublicUrl")
+            
+            if (!haUrl) {
+                haUrl = prompt("Enter your public Home Assistant URL (including https://):")
+                if (haUrl) {
+                    localStorage.setItem("haPublicUrl", haUrl)
+                } else {
+                    throw new Error("Home Assistant URL not provided!")
+                }
+            }
+            
+            return haUrl
+        }
         
         async function isHAReachable() {
             try {
-                const response = await fetch(WebhookURL, {
-                    method: "HEAD",
-                })
+                const haUrl = getHaUrl()
+                const response = await fetch(`${haUrl}/api/webhook/play_aumio_audio`, {method: "HEAD"})
                 return response.ok
             } catch (err) {
                 return false
@@ -91,7 +112,8 @@
         
         async function playAumioAudio(mp3Url, title) {
             try {
-                await fetch(WebhookURL, {
+                const haUrl = getHaUrl()
+                await fetch(`${haUrl}/api/webhook/play_aumio_audio`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ url: mp3Url, title: title })
