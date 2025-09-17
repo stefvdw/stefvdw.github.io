@@ -21,7 +21,7 @@
             try {
                 urlField.checkValidity()
                 const url = new URL(urlField.value)
-                if(url.origin != 'https://play.aumio.com') throw new Error('Domain does not match')
+                if(url.origin != 'https://kids.aumio.com') throw new Error('Domain does not match')
                 let hash = url.searchParams.get("j")
                 if(!hash || hash.length < 1) throw new Error('No hash found')
 
@@ -195,3 +195,4 @@
     
 </body>
 </html>
+
