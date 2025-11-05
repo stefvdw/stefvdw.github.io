@@ -1,6 +1,6 @@
 export default class Game extends PresentationRequest {
     constructor() {
-        super(['/receiver.html'])
+        super(['./receiver.html'])
         navigator.presentation.defaultRequest = this
 
         this.connection = null
