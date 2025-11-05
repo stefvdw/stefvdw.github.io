@@ -18,7 +18,8 @@ export default class Receiver {
         stats = Object.entries(stats).map(([status, connections]) => `${status}:${connections.length}`).join('|')
         console.log(stats)
 
-        let url = new URL("/", connection.url)
+        let url = new URL("/", location)
+        
         url.hash = connection.id
 
         document.body.innerHTML = `<image src="https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${url}"><hr>${url}<br>${stats}`

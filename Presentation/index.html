@@ -2,7 +2,7 @@
 <head>
     
     <title>Presentation controller</title>
-
+    
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     
     <style>
@@ -50,6 +50,14 @@
         }
         setJoinCode()
         window.addEventListener('hashchange', setJoinCode) 
+        
+        if ("presentation" in navigator) {
+            document.body.append(navigator.presentation.receiver
+            ? "Receiving presentation"
+            : "(idle)")
+        } else {
+            document.body.append("Presentation API is not available in this browser.")
+        }
         
     </script>
 </head>
