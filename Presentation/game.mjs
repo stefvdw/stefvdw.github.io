@@ -14,6 +14,7 @@ export default class Game extends PresentationRequest {
 
     setConnection(event) {
         this.connection = event.connection
+        window.hash = this.connection.id
         this.connection.addEventListener('message', this.handleMessage.bind(this))
     }
     
