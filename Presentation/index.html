@@ -1,0 +1,39 @@
+<html>
+<head>
+    
+    <title>Presentation controller</title>
+    
+    <script type="module">
+
+        import Game from '/game.mjs'
+        const game = new Game()
+
+        console.log(document.forms['game'].start)
+        document.forms['game'].start.onclick = () => game.start()
+        document.forms['game'].stop.onclick = () => game.terminate()
+        document.forms['game'].close.onclick = () => game.close()
+        document.forms['game'].reconnect.onclick = () => game.reconnect()
+        document.forms['game'].message.onclick = () => game.send('test')
+
+        document.forms['game'].onsubmit = joingame
+        
+        function joingame(event) {
+            event.preventDefault()
+            const gameid = document.forms['game'].gameid.value
+            game.join(gameid)
+        }
+    </script>
+</head>
+<body>
+    <form name="game">
+        <button type="button" id="start">Start</button>
+        <button type="button" id="reconnect">Reconnect</button>
+        <button type="button" id="close">Close</button>
+        <button type="button" id="stop">Stop</button>
+        <button type="button" id="message">Message test</button>
+
+        <input id="gameid" required><button type="submit" id="join">Join</button>
+    </form>
+
+</body>
+</html>
