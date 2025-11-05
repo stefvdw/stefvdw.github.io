@@ -7,7 +7,7 @@ export default class Game extends PresentationRequest {
 
         this.addEventListener('connectionavailable', this.setConnection.bind(this))
 
-        this.getAvailability().then(availability => availability.addEventListener('change', console.log))
+        this.getAvailability().then(availability => availability.addEventListener('change', this.log))
 
 
     }
@@ -45,5 +45,15 @@ export default class Game extends PresentationRequest {
     reconnect() {
         if(!this.connection) return
         super.reconnect(this.connection.id)
+    }
+
+    log(message) {
+        let logElement = document.getElementById('log')
+        if(!logElement) {
+            logElement = document.createElement('div')
+            logElement.id = 'log'
+            document.body.append(logElement)
+        }
+        logElement.append(message)
     }
 }

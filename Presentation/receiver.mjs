@@ -18,7 +18,7 @@ export default class Receiver {
         stats = Object.entries(stats).map(([status, connections]) => `${status}:${connections.length}`).join('|')
         console.log(stats)
 
-        let url = new URL("/Presentation", location)
+        let url = new URL("/Presentation/", location)
         
         url.hash = connection.id
 

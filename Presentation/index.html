@@ -31,7 +31,7 @@
         const game = new Game()
         
         console.log(document.forms['game'].start)
-        document.forms['game'].start.onclick = () => game.start()
+        document.forms['game'].start.onclick = () => game.start().then(game.log)
         document.forms['game'].stop.onclick = () => game.terminate()
         document.forms['game'].close.onclick = () => game.close()
         document.forms['game'].reconnect.onclick = () => game.reconnect()
