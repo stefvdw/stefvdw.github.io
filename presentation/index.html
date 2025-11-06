@@ -1,0 +1,78 @@
+<html>
+<head>
+    
+    <title>Presentation controller</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+    <style>
+        body {
+            padding: 3rem;
+            background-color: black;
+            color: whitesmoke;
+            font-size: 50px;
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            
+            * {
+                padding: 1rem;
+            }
+        }
+        
+    </style>
+    
+    <script type="module">
+        
+        import Controller from './controller.mjs'
+        import Logger from './logger.mjs'
+        const controller = new Controller()
+        
+        document.forms['game'].start.onclick = () => controller.start().then(controller.log)
+        document.forms['game'].stop.onclick = () => controller.terminate()
+        document.forms['game'].close.onclick = () => controller.close()
+        document.forms['game'].reconnect.onclick = () => controller.reconnect()
+        document.forms['game'].message.onclick = () => controller.send('test')
+        
+        document.forms['game'].onsubmit = joingame
+        
+        function joingame(event) {
+            event.preventDefault()
+            const gameid = document.forms['game'].gameid.value
+            controller.join(gameid)
+        }
+        
+        function setJoinCode() {
+            document.forms['game'].gameid.value = location.hash.substr(1)
+        }
+        setJoinCode()
+        window.addEventListener('hashchange', setJoinCode) 
+        
+        if ("presentation" in navigator) {
+            document.body.append(navigator.presentation.receiver
+            ? "Receiving presentation"
+            : "(idle)")
+        } else {
+            document.body.append("Presentation API is not available in this browser.")
+        }
+        
+    </script>
+</head>
+<body>
+    <form name="game">
+        <button type="button" id="start">Start</button>
+        <button type="button" id="reconnect">Reconnect</button>
+        <button type="button" id="close">Close</button>
+        <button type="button" id="stop">Stop</button>
+        <button type="button" id="message">Message test</button>
+        
+        <input id="gameid" required><button type="submit" id="join">Join</button>
+    </form>
+
+    <dl is="onscreen-logger"></dl>
+    
+</body>
+</html>
