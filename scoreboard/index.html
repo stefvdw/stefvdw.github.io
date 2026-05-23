@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1, user-scalable=no'>
+    <title>Scoreboard</title>
+    <style>
+        :root {
+            --accent-color: #ff3ca6;
+            --fun-1: #9b5de5;
+            --fun-2: #00bbf9;
+            --fun-3: #00f5d4;
+            --fun-4: #fee440;
+            --fun-5: #f15bb5;
+            --radius: 0.75rem;
+            --gap: 0.5rem;
+            --bg-color: light-dark(Canvas, #1a1a1a);
+            --panel: light-dark(Canvas, #222);
+            --border: light-dark(#ccc, #444);
+        }
+        
+        * {
+            color-scheme: light dark;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, "Roboto", Verdana, sans-serif;
+            color: CanvasText;
+            background: none;
+            border: none;
+            outline: none;
+            text-decoration: none;
+            user-select: none;
+            accent-color: var(--accent-color);
+            
+            &[hidden] {
+                display: none !important;
+            }
+            
+            &:disabled {
+                opacity: 0.3 !important;
+            }
+        }
+        
+        body {
+            margin: auto;
+            display: grid;
+            height: 100vh;
+            grid-template-rows: auto 1fr auto;
+            grid-template-areas:
+            "nav"
+            "scoreboard"
+            "footer";
+            background: var(--bg-color);
+            gap: 0.75rem;
+            padding: 0.75rem;
+        }
+        
+        form {
+            display: contents;
+        }
+        
+        /* ================= NAV / SELECT ================= */
+        
+        select {
+            grid-area: nav;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius);
+            background: var(--panel);
+            border: 1px solid var(--border);
+            font-weight: bold;
+            cursor: pointer;
+            
+            option {
+                padding: 1rem;
+                border-radius: var(--radius);
+                margin-bottom: var(--gap);
+            }
+        }
+        
+        /* Colorful options (best effort cross-browser) */
+        option:nth-child(1) { background: var(--panel); }
+        option:nth-child(2) { background: var(--fun-1); color: white; }
+        option:nth-child(3) { background: var(--fun-2); color: black; }
+        option:nth-child(4) { background: var(--fun-3); color: black; }
+        option:nth-child(5) { background: var(--fun-4); color: black; }
+        option:nth-child(6) { background: var(--fun-5); color: white; }
+        
+        /* ================= FORM ================= */
+        
+        fieldset {
+            display: flex;
+            gap: var(--gap);
+            flex-wrap: wrap;
+            
+            &:disabled {
+                display: none;
+            }
+        }
+        
+        input:not([type="checkbox"]) {
+            padding: 0.75rem;
+            border-radius: var(--radius);
+            background: var(--panel);
+            border: 1px solid var(--border);
+            flex: 1;
+        }
+        
+        input[type="number"] {
+            text-align: center;
+            min-width: 6ch;
+        }
+        
+        label {
+            display: flex;
+            gap: var(--gap);
+            flex: 1;
+        }
+        
+        button {
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius);
+            background: var(--accent-color);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+            
+            &:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 3px 0 rgba(0,0,0,0.2);
+            }
+            
+            &:active {
+                transform: translateY(1px);
+            }
+        }
+        
+        #saveRoundButton {
+            grid-area: footer;
+        }
+        
+        score-board {
+            grid-area: scoreboard;
+            display: grid;
+            grid-auto-rows: min-content;
+            gap: var(--gap);
+            overflow-y: auto;
+            
+            > * {
+                padding: 0.6rem;
+                border-radius: var(--radius);
+                text-align: center;
+                background: var(--panel);
+                border: 1px solid var(--border);
+                &:nth-child(5n + 2) {background: color-mix(in oklab, var(--fun-1) 30%, var(--panel));}
+                &:nth-child(5n + 3) {background: color-mix(in oklab, var(--fun-2) 30%, var(--panel));}
+                &:nth-child(5n + 4) {background: color-mix(in oklab, var(--fun-3) 30%, var(--panel));}
+                &:nth-child(5n + 5) {background: color-mix(in oklab, var(--fun-4) 30%, var(--panel));}
+            }
+            
+            
+            .header {
+                position: sticky;
+                top: 0;
+                background: var(--bg-color);
+                font-weight: bold;
+                border-bottom: 2px solid var(--accent-color);
+                z-index: 1;
+            }
+            
+            .label {
+                opacity: 0.8;
+            }
+            .total {
+                background: var(--fun-3);
+                color: black;
+                font-weight: bold;
+            }
+            input {
+                width: 100%;
+                padding: 0.5rem;
+                border-radius: var(--radius);
+                background: light-dark(Canvas, #333);
+                border: 1px solid var(--border);
+                text-align: center;
+                font-weight: bold;
+            }
+        }
+        
+        /* ================= RESPONSIVE ================= */
+        
+        @media (min-width: 740px) {
+            body {
+                grid-template-columns: 1fr 3fr;
+                grid-template-areas:
+                "nav header"
+                "nav scoreboard"
+                "nav footer";
+            }
+            
+            select {
+                overflow-y: auto;
+                padding: 0;
+            }
+        }
+    </style>
+    <script type="module">
+        
+        import Game from './app.mjs'     
+        
+    </script>
+</head>
+<body>
+    <form is="game-form">
+        <select name="gameId" aria-label="Select a game"></select>
+        <fieldset id="gameSetup">
+            <label>
+                <input name="gameName" placeholder="Game name">
+            </label>
+            
+            <label>
+                <input name="newPlayer" placeholder="Add player" minlength="2">
+                <button type="submit" name="addPlayer">+</button>
+            </label>
+        </fieldset>
+        
+        <score-board id="scoreboard"></score-board>
+        <button type="submit" name="saveRound" id="saveRoundButton">Start game</button>
+        
+    </form>
+</body>
+</html>
