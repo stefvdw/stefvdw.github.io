@@ -4,6 +4,10 @@
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1, user-scalable=no'>
     <title>Scoreboard</title>
+
+    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" href="./icon.svg" type="image/svg+xml">
+    <meta name="theme-color" content="hotpink">
     <style>
         :root {
             --accent-color: #ff3ca6;
@@ -232,7 +236,11 @@
     </style>
     <script type="module">
         
-        import Game from './app.mjs'     
+        import Game from './app.mjs'    
+        
+         if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.mjs');
+        }
         
     </script>
 </head>

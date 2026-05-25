@@ -1,0 +1,20 @@
+{
+    "name": "ScoreBoard",
+    "lang": "en-us",
+    "short_name": "ScoreBoard",
+    "description": "Keep tack of some scores",
+    "id": "scoreboard",
+    "start_url": "./",
+    "scope": "./",
+    "display": "standalone",
+    "theme_color": "hotpink",
+    "background_color": "hotpink",
+    "orientation": "any",
+    "icons": [
+        {
+            "src": "icon.svg",
+            "purpose": "maskable any",
+            "sizes": "any"
+        }
+    ]      
+}
