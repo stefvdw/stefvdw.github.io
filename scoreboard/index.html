@@ -45,7 +45,7 @@
         body {
             margin: auto;
             display: grid;
-            height: 100vh;
+            height: 100svh;
             grid-template-rows: auto 1fr auto;
             grid-template-areas:
             "nav"
@@ -60,16 +60,22 @@
             display: contents;
         }
         
+        header {
+            display: flex;
+            gap: var(--gap);
+            grid-area: nav;
+        }
+        
         /* ================= NAV / SELECT ================= */
         
         select {
-            grid-area: nav;
             padding: 0.75rem 1rem;
             border-radius: var(--radius);
             background: var(--panel);
             border: 1px solid var(--border);
             font-weight: bold;
             cursor: pointer;
+            flex: 1;
             
             option {
                 padding: 1rem;
@@ -204,6 +210,25 @@
                 padding: 0;
             }
         }
+        
+        #menu:popover-open {
+            display: flex;
+            flex-direction: column;
+            gap: var(--gap);
+            background-color: Canvas;
+            border: 1px solid gray;
+            padding: 1rem;
+            border-radius: var(--radius);
+            position-area: bottom;
+            
+            
+            &::backdrop {
+                background-color: rgb(0 0 0 / 10%);
+            }
+        }
+        
+        
+        
     </style>
     <script type="module">
         
@@ -212,8 +237,19 @@
     </script>
 </head>
 <body>
-    <form is="game-form">
-        <select name="gameId" aria-label="Select a game"></select>
+    <header>
+        
+        <select name="gameId" aria-label="Select a game" form="game"></select>
+        <button id="menuBtn" popovertarget="menu">⋮</button>
+        <div id="menu" popover anchor="menuBtn">
+            <button>Delete game</button>
+            <button>Remove last round</button>
+            <!-- <button>Action 3</button> -->
+        </div>
+        
+    </header>
+    <form is="game-form" id="game">
+        
         <fieldset id="gameSetup">
             <label>
                 <input name="gameName" placeholder="Game name">
