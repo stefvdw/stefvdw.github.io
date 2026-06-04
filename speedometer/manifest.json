@@ -1,0 +1,20 @@
+{
+    "name": "Speed-o-meter",
+    "lang": "en-us",
+    "short_name": "Speedmeter",
+    "description": "Minimall PWA to track GPS speed",
+    "id": "speedometer",
+    "start_url": "./",
+    "scope": "./",
+    "display": "standalone",
+    "theme_color": "teal",
+    "background_color": "teal",
+    "orientation": "any",
+    "icons": [
+        {
+            "src": "icon.svg",
+            "purpose": "maskable any",
+            "sizes": "any"
+        }
+    ]      
+}
