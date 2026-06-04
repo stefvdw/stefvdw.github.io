@@ -5,6 +5,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
     <title>Speed-o-meter</title>
+    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" href="./icon.svg" type="image/svg+xml">
+    <meta name="theme-color" content="teal">
     <script type="module">
         import SpeedOMeter from './speed-o-meter.mjs'
 
@@ -32,11 +35,15 @@
             document.querySelector('dl').append(dd)
         })
 
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.mjs');
+        }
+
     </script>
     <style>
         html { 
-            --brand: hotpink;
-            scrollbar-color: hotpink Canvas;
+            --brand: teal;
+            scrollbar-color: teal Canvas;
             color-scheme: light dark;
         }
 
